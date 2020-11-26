@@ -47,6 +47,7 @@
 
 namespace Ecjia\App\Installer\Controllers;
 
+use Ecjia\App\Installer\Exceptions\InstallLockedException;
 use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DNSCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DomainCheck;
@@ -117,81 +118,105 @@ class IndexController extends BaseControllerAbstract
         return $this->displayAppTemplate('installer', 'front/welcome.dwt');
     }
 
+    public function check_agree()
+    {
+        $step = $this->cookie->getInstallStep();
+
+        if ($step == InstallCheckStatus::STEP1) {
+            $install_step = (InstallCheckStatus::make())->addFinishStatus(InstallCheckStatus::STEP1)->getStatus();
+            $this->cookie->setInstallStep($install_step);
+            $back_url = RC_Uri::url('installer/index/detect');
+            return $this->showmessage(__('检测通过', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => $back_url));
+        }
+        else {
+            return $this->showmessage(__('请先同意协议', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
+    }
+
     /*
      * 检查环境页面加载
      */
     public function detect()
     {
-        $this->check_installed();
-        $this->check_step(2);
+        try {
+            $this->check_installed();
+//            $this->check_step(2);
 
-//        $install_step = $this->cookie->getInstallStep();
+        $install_step = $this->cookie->getInstallStep();
+//        dd($install_step);
+
 //        $install_step = (InstallCheckStatus::make($install_step))->addFinishStatus(InstallCheckStatus::STEP2)->getStatus();
 //        $this->cookie->setInstallStep($install_step);
 
-        $this->stepInstallStatus(InstallCheckStatus::STEP2);
+            $this->stepInstallStatus(InstallCheckStatus::STEP2);
 
-        $checker = new InstallChecker();
+            $checker = new InstallChecker();
 
-        //检查程序所在子目录位置
-        $checker->checkItem('web_path', WebPathCheck::class);
-        //检查操作系统
-        $checker->checkItem('os', PHPOSCheck::class);
-        $checker->checkItem('ip', function () {
-            return [
-                'value' => $_SERVER['SERVER_ADDR'],
-                'checked_status' => true
-            ];
-        });
+            //检查程序所在子目录位置
+            $checker->checkItem('web_path', WebPathCheck::class);
+            //检查操作系统
+            $checker->checkItem('os', PHPOSCheck::class);
+            $checker->checkItem('ip', function () {
+                return [
+                    'value'          => $_SERVER['SERVER_ADDR'],
+                    'checked_status' => true
+                ];
+            });
 
-        $checker->checkItem('web_server', WebServerCheck::class);
-        $checker->checkItem('domain', DomainCheck::class);
-        $checker->checkItem('php_check', PHPVersionCheck::class);
-        $checker->checkItem('php_dns', DNSCheck::class);
-        $checker->checkItem('safe_mode', SafeModeCheck::class);
-        $checker->checkItem('timezone', TimezoneCheck::class);
-        $checker->checkItem('ext_mysqli', ExtensionMysqliCheck::class);
-        $checker->checkItem('ext_pdo', ExtensionPdoMysqlCheck::class);
-        $checker->checkItem('ext_openssl', ExtensionOpensslCheck::class);
-        $checker->checkItem('ext_socket', ExtensionSocketCheck::class);
-        $checker->checkItem('ext_gd', ExtensionGDCheck::class);
-        $checker->checkItem('ext_curl', ExtensionCurlCheck::class);
-        $checker->checkItem('ext_fileinfo', ExtensionFileinfoCheck::class);
-        $checker->checkItem('ext_zlib', ExtensionZlibCheck::class);
-        $checker->checkItem('upload_filesize', UploadMaxFilesizeCheck::class);
-        $checker->checkItem('dir_permission', DirectoryPermissionCheck::class);
+            $checker->checkItem('web_server', WebServerCheck::class);
+            $checker->checkItem('domain', DomainCheck::class);
+            $checker->checkItem('php_check', PHPVersionCheck::class);
+            $checker->checkItem('php_dns', DNSCheck::class);
+            $checker->checkItem('safe_mode', SafeModeCheck::class);
+            $checker->checkItem('timezone', TimezoneCheck::class);
+            $checker->checkItem('ext_mysqli', ExtensionMysqliCheck::class);
+            $checker->checkItem('ext_pdo', ExtensionPdoMysqlCheck::class);
+            $checker->checkItem('ext_openssl', ExtensionOpensslCheck::class);
+            $checker->checkItem('ext_socket', ExtensionSocketCheck::class);
+            $checker->checkItem('ext_gd', ExtensionGDCheck::class);
+            $checker->checkItem('ext_curl', ExtensionCurlCheck::class);
+            $checker->checkItem('ext_fileinfo', ExtensionFileinfoCheck::class);
+            $checker->checkItem('ext_zlib', ExtensionZlibCheck::class);
+            $checker->checkItem('upload_filesize', UploadMaxFilesizeCheck::class);
+            $checker->checkItem('dir_permission', DirectoryPermissionCheck::class);
 
-        $checker->checking();
+            $checker->checking();
 
-        $checked = $checker->getChecked();
+            $checked = $checker->getChecked();
 
-        $result = $checker->getCheckResult();
+            $result = $checker->getCheckResult();
 
-        $install_errors = $checker->getEcjiaError()->get_error_messages();
+            $install_errors = $checker->getEcjiaError()->get_error_messages();
 
-        $sys_info = $checked;
+            $sys_info = $checked;
 
-        unset($sys_info['web_path']);
-        unset($sys_info['ip']);
-        unset($sys_info['domain']);
-        unset($sys_info['dir_permission']);
+            unset($sys_info['web_path']);
+            unset($sys_info['ip']);
+            unset($sys_info['domain']);
+            unset($sys_info['dir_permission']);
 
-        $dir_permission = $checked['dir_permission'];
+            $dir_permission = $checked['dir_permission'];
 
-        //检测必须开启项是否开启
-        $check_all_right = empty($result) ? true : false;
+            //检测必须开启项是否开启
+            $check_all_right = empty($result) ? true : false;
 
-        $this->assign('ecjia_version', \Ecjia\Component\Framework\Ecjia::VERSION);
-        $this->assign('ecjia_release', \Ecjia\Component\Framework\Ecjia::RELEASE);
+            $this->assign('ecjia_version', \Ecjia\Component\Framework\Ecjia::VERSION);
+            $this->assign('ecjia_release', \Ecjia\Component\Framework\Ecjia::RELEASE);
 
-        $this->assign('install_errors', $install_errors);
-        $this->assign('sys_info', $sys_info);
-        $this->assign('dir_permission', $dir_permission);
-        $this->assign('check_right', $check_all_right);
+            $this->assign('install_errors', $install_errors);
+            $this->assign('sys_info', $sys_info);
+            $this->assign('dir_permission', $dir_permission);
+            $this->assign('check_right', $check_all_right);
 
-        $this->assign('ecjia_step', 2);
+            $this->assign('ecjia_step', 2);
 
-        return $this->displayAppTemplate('installer', 'front/detect.dwt');
+            return $this->displayAppTemplate('installer', 'front/detect.dwt');
+        } catch (InstallLockedException $exception) {
+            //已经安装跳转安装页面
+            return $this->redirect(RC_Uri::url('installer/index/installed'));
+        } catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -282,7 +307,7 @@ class IndexController extends BaseControllerAbstract
     private function stepInstallStatus($status)
     {
         $install_step = $this->cookie->getInstallStep();
-        $install_step = (InstallCheckStatus::make($install_step))->addFinishStatus($status)->getStatus();
+        $install_step = InstallCheckStatus::make($install_step)->addFinishStatus($status)->getStatus();
         $this->cookie->setInstallStep($install_step);
     }
 
@@ -608,12 +633,13 @@ class IndexController extends BaseControllerAbstract
 
     /**
      * 检测是否已安装程序
+     * @throws InstallLockedException
      */
     private function check_installed()
     {
         /* 初始化流程控制变量 */
         if (Helper::checkInstallLock()) {
-            $this->redirectWithExited(RC_Uri::url('installer/index/installed'));
+            throw new InstallLockedException('已经安装');
         }
     }
 

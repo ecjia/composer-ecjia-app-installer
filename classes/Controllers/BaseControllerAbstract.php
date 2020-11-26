@@ -52,6 +52,7 @@ abstract class BaseControllerAbstract extends SimpleController
         //系统加载脚本
         RC_Script::enqueue_script('ecjia-jquery-chosen');
         RC_Script::enqueue_script('jquery-migrate');
+        RC_Script::enqueue_script('jquery-form');
         RC_Script::enqueue_script('jquery-uniform');
         RC_Script::enqueue_script('smoke');
         RC_Script::enqueue_script('jquery-cookie');
