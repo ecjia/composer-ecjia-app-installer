@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Ecjia\App\Installer;
+namespace Ecjia\App\Installer\InstallChecker;
 
 
 use ecjia_error;

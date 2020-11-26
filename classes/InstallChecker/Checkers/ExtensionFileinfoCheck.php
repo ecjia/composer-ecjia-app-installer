@@ -1,23 +1,23 @@
 <?php
 
 
-namespace Ecjia\App\Installer\Checkers;
+namespace Ecjia\App\Installer\InstallChecker\Checkers;
 
 
-use Ecjia\App\Installer\InstallChecker;
+use Ecjia\App\Installer\InstallChecker\InstallChecker;
 
 /**
- * 检测PHP扩展 socket
+ * 检查PHP扩展 fileinfo
  *
- * Class ExtensionOpensslCheck
+ * Class ExtensionFileinfoCheck
  * @package Ecjia\App\Installer\Checkers
  */
-class ExtensionSocketCheck
+class ExtensionFileinfoCheck
 {
 
     public function handle(InstallChecker $checker)
     {
-        if (function_exists('fsockopen')) {
+        if (extension_loaded('fileinfo')) {
             $checked_label = $checker->getOk();
             $checked_status = true;
         }
@@ -30,10 +30,9 @@ class ExtensionSocketCheck
             'value' => $checked_status ? __('开启', 'installer') : __('关闭', 'installer'),
             'checked_label' => $checked_label,
             'checked_status' => $checked_status,
-            'name' => __('Socket支持', 'installer'),
+            'name' => __('Fileinfo扩展', 'installer'),
             'suggest_label' => __('必须开启', 'installer'),
         ];
 
     }
-
 }

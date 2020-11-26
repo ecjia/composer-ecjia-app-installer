@@ -1,23 +1,25 @@
 <?php
 
 
-namespace Ecjia\App\Installer\Checkers;
+namespace Ecjia\App\Installer\InstallChecker\Checkers;
 
 
-use Ecjia\App\Installer\InstallChecker;
+use Ecjia\App\Installer\InstallChecker\InstallChecker;
 
 /**
- * 检测PHP扩展 openssl
+ * 允许上传的最大文件大小
  *
- * Class ExtensionOpensslCheck
+ * Class UploadMaxFilesizeCheck
  * @package Ecjia\App\Installer\Checkers
  */
-class ExtensionOpensslCheck
+class UploadMaxFilesizeCheck
 {
 
     public function handle(InstallChecker $checker)
     {
-        if (extension_loaded('openssl')) {
+        $max_filesize = ini_get('upload_max_filesize');
+
+        if ($max_filesize >= 2) {
             $checked_label = $checker->getOk();
             $checked_status = true;
         }
@@ -27,13 +29,12 @@ class ExtensionOpensslCheck
         }
 
         return [
-            'value' => $checked_status ? __('开启', 'installer') : __('关闭', 'installer'),
+            'value' => $max_filesize,
             'checked_label' => $checked_label,
             'checked_status' => $checked_status,
-            'name' => __('OpenSSL扩展', 'installer'),
-            'suggest_label' => __('必须开启', 'installer'),
+            'name' => __('文件上传大小', 'installer'),
+            'suggest_label' => __('2M及以上', 'installer'),
         ];
 
     }
-
 }

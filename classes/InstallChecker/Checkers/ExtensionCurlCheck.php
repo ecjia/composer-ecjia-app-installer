@@ -1,25 +1,23 @@
 <?php
 
 
-namespace Ecjia\App\Installer\Checkers;
+namespace Ecjia\App\Installer\InstallChecker\Checkers;
 
 
-use Ecjia\App\Installer\InstallChecker;
+use Ecjia\App\Installer\InstallChecker\InstallChecker;
 
 /**
- * 允许上传的最大文件大小
+ * 检查PHP扩展 curl
  *
- * Class UploadMaxFilesizeCheck
+ * Class ExtensionCurlCheck
  * @package Ecjia\App\Installer\Checkers
  */
-class UploadMaxFilesizeCheck
+class ExtensionCurlCheck
 {
 
     public function handle(InstallChecker $checker)
     {
-        $max_filesize = ini_get('upload_max_filesize');
-
-        if ($max_filesize >= 2) {
+        if (extension_loaded('curl')) {
             $checked_label = $checker->getOk();
             $checked_status = true;
         }
@@ -29,11 +27,11 @@ class UploadMaxFilesizeCheck
         }
 
         return [
-            'value' => $max_filesize,
+            'value' => $checked_status ? __('开启', 'installer') : __('关闭', 'installer'),
             'checked_label' => $checked_label,
             'checked_status' => $checked_status,
-            'name' => __('文件上传大小', 'installer'),
-            'suggest_label' => __('2M及以上', 'installer'),
+            'name' => __('CURL扩展', 'installer'),
+            'suggest_label' => __('必须开启', 'installer'),
         ];
 
     }

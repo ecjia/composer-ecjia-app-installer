@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Ecjia\App\Installer\Checkers;
+namespace Ecjia\App\Installer\InstallChecker\Checkers;
 
 
-use Ecjia\App\Installer\InstallChecker;
+use Ecjia\App\Installer\InstallChecker\InstallChecker;
 
 /**
  * 检查WEB服务器
