@@ -4,6 +4,8 @@
 namespace Ecjia\App\Installer;
 
 
+use RC_Cookie;
+
 class InstallCookie
 {
 
@@ -13,20 +15,14 @@ class InstallCookie
         'install_config',
     ];
 
-
-    public function __construct()
-    {
-
-    }
-
     public function setInstallStep($value)
     {
-        setcookie('install_step', $value);
+        RC_Cookie::queue(RC_Cookie::make('install_step', $value, 30));
     }
 
     public function getInstallStep()
     {
-        return cookie('install_step');
+        return RC_Cookie::get('install_step');
     }
 
     /**
@@ -35,11 +31,8 @@ class InstallCookie
     public function clear()
     {
         foreach ($this->cookies as $cookie) {
-            setcookie($cookie, null, SYS_TIME - 3600);
+            RC_Cookie::queue(RC_Cookie::forget($cookie));
         }
     }
-
-
-
 
 }
