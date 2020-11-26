@@ -6,13 +6,29 @@
 			//判断用户是否同意协议
 			$("#agree").change(function() {
 				if ($("#agree").prop("checked")) {
-					$.cookie('agree', 1);
+					$.cookie('install_agree', 1);
 					$("#ecjia_install").attr('disabled',false);//按钮可用
 				} else {
-					$.cookie('agree', null);
+					$.cookie('install_agree', null);
 					$("#ecjia_install").attr('disabled',true);//按钮不可用
 				}
 			});
+            $('#install_check_agree').on('submit', function(event) {
+                event.preventDefault();
+                $this = $(this);
+                console.log($this);
+                $this.ajaxSubmit({
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.state === 'success') {
+                            window.location.href = data.url;
+                        } else {
+                            var $info = $('<div class="staticalert alert alert-error ui_showmessage"><a data-dismiss="alert" class="close">×</a>' + data.message + '</div>');
+                            $info.appendTo('.error-msg').delay(5000).hide(0);
+                        }
+                    }
+                });
+            })
 
 			//检查数据库账号密码是否正确，数据库版本是否小于5.5
 			$('#dbpassword').blur(function() {
