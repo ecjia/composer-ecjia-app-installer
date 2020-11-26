@@ -28,7 +28,7 @@ class InstallMigrationFile
      * 安装数据库结构
      *
      * @param int $limit
-     * @return  boolean | ecjia_error   成功返回true，失败返回ecjia_error
+     * @return  boolean | array | ecjia_error   成功返回true，失败返回ecjia_error
      */
     public function installStructure($limit = 20)
     {
