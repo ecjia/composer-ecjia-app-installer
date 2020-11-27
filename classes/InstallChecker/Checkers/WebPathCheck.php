@@ -19,7 +19,7 @@ class WebPathCheck
     {
         $name = $_SERVER['SCRIPT_NAME'];
 
-        if ($name != '/index.php') {
+        if ($name != '/sites/installer/index.php') {
             $path_name = substr($name, 0, -9);
             $checker->getEcjiaError()->add('path_error', sprintf(__('抱歉，当前程序运行在 %s 目录下，ECJia到家程序必须运行在网站根目录下/，请您更换目录后再重新运行安装程序。', 'installer'), $path_name));
             $checked_status = false;
