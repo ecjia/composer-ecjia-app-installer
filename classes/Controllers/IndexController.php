@@ -113,7 +113,7 @@ class IndexController extends BaseControllerAbstract
         $this->assign('ecjia_step', 1);
 
         $this->assign('product_name', config('site.shop_name'));
-        $this->assign('install_license', config('app-installer::daojia_license.license'));
+        $this->assign('install_license', config('app-installer::install_license.license'));
 
         return $this->displayAppTemplate('installer', 'front/welcome.dwt');
     }
