@@ -76,6 +76,7 @@ use Ecjia\App\Installer\InstallCookie;
 use Ecjia\App\Installer\InstallDatabase;
 use Ecjia\App\Installer\InstallEnvConfig;
 use Ecjia\App\Installer\InstallMigrationFile;
+use Ecjia\App\Installer\Timezone;
 use RC_App;
 use RC_Hook;
 use RC_Uri;
@@ -107,18 +108,11 @@ class IndexController extends BaseControllerAbstract
 
         $this->cookie->clear();
 
-//        $install_step = (InstallCheckStatus::make())->addFinishStatus(InstallCheckStatus::STEP1)->getStatus();
-//        $this->cookie->setInstallStep($install_step);
-
         $page = (new PageEventManager('init'))->addPageHandler(AgreeChangeEvent::class)
             ->addPageHandler(InstallCheckAgreeSubmitEvent::class);
         $this->loadPageScript($page);
 
-        $this->stepInstallStatus(InstallCheckStatus::STEP1);
-
-
-
-        $this->assign('ecjia_step', 1);
+        $this->stepInstallStatus(InstallCheckStatus::STEP0);
 
         $this->assign('product_name', config('site.shop_name'));
         $this->assign('install_license', config('app-installer::install_license.license'));
@@ -130,9 +124,8 @@ class IndexController extends BaseControllerAbstract
     {
         $step = $this->cookie->getInstallStep();
 
-        if ($step == InstallCheckStatus::STEP1) {
-            $install_step = (InstallCheckStatus::make())->addFinishStatus(InstallCheckStatus::STEP1)->getStatus();
-            $this->cookie->setInstallStep($install_step);
+        if ($step == InstallCheckStatus::STEP0) {
+            $this->stepInstallStatus(InstallCheckStatus::STEP1);
             $back_url = RC_Uri::url('installer/index/detect');
             return $this->showmessage(__('检测通过', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => $back_url));
         }
@@ -148,14 +141,7 @@ class IndexController extends BaseControllerAbstract
     {
         try {
             $this->check_installed();
-//            $this->check_step(2);
-
-        $install_step = $this->cookie->getInstallStep();
-//        dd($install_step);
-
-//        $install_step = (InstallCheckStatus::make($install_step))->addFinishStatus(InstallCheckStatus::STEP2)->getStatus();
-//        $this->cookie->setInstallStep($install_step);
-
+            $this->checkInstallStep(InstallCheckStatus::STEP1);
             $this->stepInstallStatus(InstallCheckStatus::STEP2);
 
             $checker = new InstallChecker();
@@ -216,7 +202,7 @@ class IndexController extends BaseControllerAbstract
             $this->assign('dir_permission', $dir_permission);
             $this->assign('check_right', $check_all_right);
 
-            $this->assign('ecjia_step', 2);
+//            $this->assign('ecjia_step', 2);
 
             return $this->displayAppTemplate('installer', 'front/detect.dwt');
         } catch (InstallLockedException $exception) {
@@ -233,23 +219,16 @@ class IndexController extends BaseControllerAbstract
     public function deploy()
     {
         $this->check_installed();
-        $this->check_step(3);
-//        setcookie('install_step3', 1);
-
-//        $install_step = $this->cookie->getInstallStep();
-//        $install_step = (InstallCheckStatus::make($install_step))->addFinishStatus(InstallCheckStatus::STEP3)->getStatus();
-//        $this->cookie->setInstallStep($install_step);
-
+        $this->checkInstallStep(InstallCheckStatus::STEP2);
         $this->stepInstallStatus(InstallCheckStatus::STEP3);
 
-        $installer_lang = 'zh_cn';
-        $prefix         = 'ecjia_';
+
         $show_timezone  = 'yes';
-        $timezones      = Helper::getTimezones($installer_lang);
+        $timezones      = Timezone::getTimezones();
 
         $this->assign('timezones', $timezones);
         $this->assign('show_timezone', $show_timezone);
-        $this->assign('local_timezone', Helper::getLocalTimezone());
+        $this->assign('local_timezone', Timezone::getLocalTimezone());
         $this->assign('correct_img', RC_App::apps_url('statics/front/images/correct.png', $this->__FILE__));
         $this->assign('error_img', RC_App::apps_url('statics/front/images/error.png', $this->__FILE__));
 
@@ -266,10 +245,12 @@ class IndexController extends BaseControllerAbstract
 //        $install_step = $this->cookie->getInstallStep();
 //        $install_step = (InstallCheckStatus::make($install_step))->addFinishStatus(InstallCheckStatus::STEP4)->getStatus();
 //        $this->cookie->setInstallStep($install_step);
+        $result = $this->checkInstallStep(InstallCheckStatus::STEP3);
+
 
         $this->stepInstallStatus(InstallCheckStatus::STEP4);
 
-        $result = $this->check_step(4);
+
         if (!$result) {
             $this->check_installed();
 //            //安装完成后的一些善后处理
@@ -598,45 +579,45 @@ class IndexController extends BaseControllerAbstract
      * @param $step
      * @return bool
      */
-    private function check_step($step)
+    private function checkInstallStep($step)
     {
-        if (InstallCheckStatus::STEP1 & $step !== InstallCheckStatus::STEP1) {
-
-        }
-
-        if (InstallCheckStatus::STEP2 & $step !== InstallCheckStatus::STEP2) {
-            $this->redirectWithExited(RC_Uri::url('installer/index/init'));
-        }
-
-        if (InstallCheckStatus::STEP3 & $step !== InstallCheckStatus::STEP3) {
-            $this->redirectWithExited(RC_Uri::url('installer/index/detect'));
-        }
-
-        if (InstallCheckStatus::STEP4 & $step !== InstallCheckStatus::STEP4) {
-            $this->redirectWithExited(RC_Uri::url('installer/index/deploy'));
-        }
-
-        if (InstallCheckStatus::STEP5 & $step !== InstallCheckStatus::STEP5) {
-
-        }
-
-        if ($step > 1) {
-            if (!isset($_COOKIE['install_step1']) || !isset($_COOKIE['agree'])) {
-                $this->redirectWithExited(RC_Uri::url('installer/index/init'));
-            }
-            if ($step > 2) {
-                if (!isset($_COOKIE['install_step2']) || $_COOKIE['install_config'] != 1) {
-                    $this->redirectWithExited(RC_Uri::url('installer/index/detect'));
-                } else {
-                    if ($step > 3) {
-                        if (!isset($_COOKIE['install_step3']) || !isset($_COOKIE['install_step4'])) {
-                            $this->redirectWithExited(RC_Uri::url('installer/index/deploy'));
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+//        if (InstallCheckStatus::STEP1 & $step !== InstallCheckStatus::STEP1) {
+//
+//        }
+//
+//        if (InstallCheckStatus::STEP2 & $step !== InstallCheckStatus::STEP2) {
+//            $this->redirectWithExited(RC_Uri::url('installer/index/init'));
+//        }
+//
+//        if (InstallCheckStatus::STEP3 & $step !== InstallCheckStatus::STEP3) {
+//            $this->redirectWithExited(RC_Uri::url('installer/index/detect'));
+//        }
+//
+//        if (InstallCheckStatus::STEP4 & $step !== InstallCheckStatus::STEP4) {
+//            $this->redirectWithExited(RC_Uri::url('installer/index/deploy'));
+//        }
+//
+//        if (InstallCheckStatus::STEP5 & $step !== InstallCheckStatus::STEP5) {
+//
+//        }
+//
+//        if ($step > 1) {
+//            if (!isset($_COOKIE['install_step1']) || !isset($_COOKIE['agree'])) {
+//                $this->redirectWithExited(RC_Uri::url('installer/index/init'));
+//            }
+//            if ($step > 2) {
+//                if (!isset($_COOKIE['install_step2']) || $_COOKIE['install_config'] != 1) {
+//                    $this->redirectWithExited(RC_Uri::url('installer/index/detect'));
+//                } else {
+//                    if ($step > 3) {
+//                        if (!isset($_COOKIE['install_step3']) || !isset($_COOKIE['install_step4'])) {
+//                            $this->redirectWithExited(RC_Uri::url('installer/index/deploy'));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        return false;
     }
 
     /**
