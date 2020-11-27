@@ -6,6 +6,11 @@ namespace Ecjia\App\Installer\InstallChecker;
 
 class InstallCheckStatus
 {
+    /**
+     * 第0步状态
+     * @var int
+     */
+    const STEP0 = 0b00000000;
 
     /**
      * 第一步状态
