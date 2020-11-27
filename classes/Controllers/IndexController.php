@@ -47,6 +47,10 @@
 
 namespace Ecjia\App\Installer\Controllers;
 
+use Ecjia\App\Installer\BrowserEvent\AgreeChangeEvent;
+use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
+use Ecjia\App\Installer\BrowserEvent\PageEventManager;
+use Ecjia\App\Installer\BrowserEvent\PageScriptPrint;
 use Ecjia\App\Installer\Exceptions\InstallLockedException;
 use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DNSCheck;
@@ -105,6 +109,10 @@ class IndexController extends BaseControllerAbstract
 
 //        $install_step = (InstallCheckStatus::make())->addFinishStatus(InstallCheckStatus::STEP1)->getStatus();
 //        $this->cookie->setInstallStep($install_step);
+
+        $page = (new PageEventManager('init'))->addPageHandler(AgreeChangeEvent::class)
+            ->addPageHandler(InstallCheckAgreeSubmitEvent::class);
+        $this->loadPageScript($page);
 
         $this->stepInstallStatus(InstallCheckStatus::STEP1);
 

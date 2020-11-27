@@ -4,8 +4,10 @@
 namespace Ecjia\App\Installer\Controllers;
 
 
+use Ecjia\App\Installer\BrowserEvent\PageScriptPrint;
 use Ecjia\System\BaseController\SimpleController;
 use RC_App;
+use RC_Hook;
 use RC_Script;
 use RC_Style;
 use RC_Uri;
@@ -52,13 +54,18 @@ abstract class BaseControllerAbstract extends SimpleController
         //系统加载脚本
         RC_Script::enqueue_script('ecjia-jquery-chosen');
         RC_Script::enqueue_script('jquery-migrate');
-        RC_Script::enqueue_script('jquery-form');
+//        RC_Script::enqueue_script('jquery-form');
         RC_Script::enqueue_script('jquery-uniform');
         RC_Script::enqueue_script('smoke');
         RC_Script::enqueue_script('jquery-cookie');
 
         RC_Script::enqueue_script('ecjia-installer', RC_App::apps_url('statics/front/js/install.js', $this->__FILE__), array('ecjia-front'), false, true);
         RC_Script::localize_script('ecjia-installer', 'js_lang', config('app-installer::jslang.installer_page'));
+    }
+
+    public function loadPageScript($page)
+    {
+        RC_Hook::add_action( 'front_print_footer_scripts',	array(new PageScriptPrint($page), 'printFooterScripts'), 30 );
     }
 
 }
