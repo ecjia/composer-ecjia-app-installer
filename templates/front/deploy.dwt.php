@@ -54,8 +54,8 @@
                         <h4>{t domain="installer"}创建您的管理员帐号{/t}</h4>
                         <ul class="ecjia-option">
                             <li class="control-group">
-	                            <label class="ecjia-label" for="username">{t domain="installer"}管理员名称{/t}</label>
-	                            <input type="text" name="username" id="username" class="text" value="" />
+	                            <label class="ecjia-label" for="user_name">{t domain="installer"}管理员名称{/t}</label>
+	                            <input type="text" name="user_name" id="user_name" class="text" value="" />
 	                            <p class="description">{t domain="installer"}请填写您的用户名{/t}</p>
                             </li>
                             
