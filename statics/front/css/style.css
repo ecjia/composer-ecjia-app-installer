@@ -152,7 +152,7 @@ select {
 	margin-left: 30px;
 }
 
-.ecjiaf-pr{position: relative;}
+.ecjiaf-pr {position: relative;}
 	
 .btn,#ui-datepicker-div .ui-datepicker-current,#ui-datepicker-div .ui-datepicker-close {
 	border: none;
@@ -350,6 +350,10 @@ select {
 
 .success a {
 	color: #264409;
+}
+
+.ecjia-color-red {
+    color:red;
 }
 
 .balloon {
