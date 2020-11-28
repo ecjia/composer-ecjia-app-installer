@@ -4,58 +4,7 @@
 	app.install = {
 		//初始化配置必填项验证
 		start: function() {
-			var dbhost = $('#dbhost').val();
-			var dbport = $('#dbport').val();
-			var dbuser = $('#dbuser').val();
-			var dbpassword = $('#dbpassword').val();
-			var dbdatabase = $('#dbdatabase').val();
-			var dbprefix = $('#dbprefix').val();
-			var username = $('#username').val();
-			var userpassword = $('#userpassword').val();
-			var confirmpassword = $('#confirmpassword').val();
-			var usermail = $('#usermail').val();
-			var is_create = $('input[name="is_create"]').val();
 
-			if ($.trim(dbhost) == '') {
-				showmessage('dbhost', js_lang.database_host_name);
-				return false;
-			}
-			if ($.trim(dbport) == '') {
-				showmessage('dbport', js_lang.database_port_number);
-				return false;
-			}
-			if ($.trim(dbuser) == '') {
-				showmessage('dbuser', js_lang.database_username);
-				return false;
-			}
-			if ($.trim(dbdatabase) == '') {
-				showmessage('dbdatabase', js_lang.database_name);
-				return false;
-			}
-			if ($.trim(dbprefix) == '') {
-				showmessage('dbprefix', js_lang.database_prefix);
-				return false;
-			}
-			if ($.trim(username) == '') {
-				showmessage('username', js_lang.administrator_name);
-				return false;
-			}
-			if ($.trim(userpassword) == '') {
-				showmessage('userpassword', js_lang.administrator_login_password);
-				return false;
-			}
-			if ($.trim(confirmpassword) == '') {
-				showmessage('confirmpassword', js_lang.administrator_login_confirmation_password);
-				return false;
-			}
-			var reg = /\w+[@]{1}\w+[.]\w+/;
-			if ($.trim(usermail) == '') {
-				showmessage('usermail', js_lang.administrator_email);
-				return false;
-			} else if (!reg.test(usermail)) {
-				showmessage('usermail', js_lang.email_format);
-				return false;
-			}
 
 			//验证数据库密码是否正确
 			var params = "db_host=" + dbhost + "&"
@@ -136,7 +85,95 @@
 				return false;
 			}
 		},
-	};
+
+        //验证配置信息必填项
+        showmessage: function (id, msg) {
+            $('.ui_showmessage').find('.close').parent().remove();
+            $('.control-group').removeClass("error f_error");
+
+            var html = $('<div class="staticalert alert alert-error ui_showmessage"><a class="close" data-dismiss="alert">×</a>' + msg + '</div>');
+            $('#js-ecjia_deploy').before(html);
+
+            $('#' + id).closest("li.control-group").addClass("error f_error");
+            $('body,html').animate({
+                scrollTop: 0
+            }, 300);
+
+            $('.close').on('click', function() {
+                $('.ui_showmessage').find('.close').parent().remove();
+            });
+            window.setTimeout(function() {
+                html.remove()
+            }, 3000);
+        },
+
+        //开始安装
+        start_install: function() {
+            $('.ui_showmessage').find('.close').parent().remove();
+            $('.control-group').removeClass("error f_error");
+            $('body').scrollTop(0).css('height', '100%');
+            $('#js-ecjia_deploy').css('display', 'none');
+            $('.path').children('li').removeClass('current').eq(3).addClass('current');
+
+            app.install.progress(0);
+            app.install.install();
+            $.cookie('install_step4', 1);
+            return false;
+        },
+
+        //进度条控制
+        progress: function(val) {
+            let html;
+            if (val === 100) {
+                html = js_lang.installation_complete
+            } else {
+                html = val + '%';
+            }
+            let progress_bar_el = $('.progress-bar');
+            progress_bar_el.css('width', val + '%');
+            progress_bar_el.html(html);
+        },
+
+        //安装程序
+        install: function() {
+            $("#js-monitor").css('display', 'block');
+            $('#js-monitor-notice').css('display', 'block');
+            createConfigFile();
+        },
+
+
+        //创建配置文件
+        createConfigFile: function() {
+            var tzs = $("#js-timezones");
+            var tz = tzs ? "timezone=" + tzs.val() : "";
+            var params = "db_host=" + $("#dbhost").val() + "&"
+                + "db_port=" + $("#dbport").val() + "&"
+                + "db_user=" + $("#dbuser").val() + "&"
+                + "db_pass=" + $("#dbpassword").val() + "&"
+                + "db_name=" + $("#dbdatabase").val() + "&"
+                + "db_prefix=" + $("#dbprefix").val() + "&" + tz;
+
+            notice_html = '<div class="install_notice">'+ js_lang.create_configuration + '</div>';
+            $('#js-notice').html(notice_html);
+
+            var url = $('input[name="create_config_file"]').val();
+            var is_create = $('input[name="is_create"]').val();
+            $.post(url, params, function(result) {
+                if (result.state === 'error') {
+                    ErrorMsg(result.message);
+                } else {
+                    SuccessMsg();
+                    progress(result.percent);
+                    if (is_create === 1) {
+                        createDatabase();
+                    } else {
+                        installStructure();
+                    }
+                }
+            });
+        }
+
+	}
 
 	var lf = "<br />";
 	var notice = null;
@@ -144,54 +181,11 @@
 	var correct_img = $('input[name="correct_img"]').val();
 	var error_img = $('input[name="error_img"]').val();
 
-	function progress(val) {
-		var html;
-		if (val == 100) {
-			html = js_lang.installation_complete
-		} else {
-			html = val + '%';
-		}
-		$('.progress-bar').css('width', val + '%');
-		$('.progress-bar').html(html);
-	}
 
-	//安装程序
-	function install() {
-		$("#js-monitor").css('display', 'block');
-		$('#js-monitor-notice').css('display', 'block');
-		createConfigFile();
-	}
 
-	//创建配置文件
-	function createConfigFile() {
-		var tzs = $("#js-timezones");
-		var tz = tzs ? "timezone=" + tzs.val() : "";
-		var params = "db_host=" + $("#dbhost").val() + "&"
-			+ "db_port=" + $("#dbport").val() + "&"
-			+ "db_user=" + $("#dbuser").val() + "&"
-			+ "db_pass=" + $("#dbpassword").val() + "&"
-			+ "db_name=" + $("#dbdatabase").val() + "&"
-			+ "db_prefix=" + $("#dbprefix").val() + "&" + tz;
 
-		notice_html = '<div class="install_notice">'+ js_lang.create_configuration + '</div>';
-		$('#js-notice').html(notice_html);
 
-		var url = $('input[name="create_config_file"]').val();
-		var is_create = $('input[name="is_create"]').val();
-		$.post(url, params, function(result) {
-			if (result.state == 'error') {
-				ErrorMsg(result.message);
-			} else {
-				SuccessMsg();
-				progress(result.percent);
-				if (is_create == 1) {
-					createDatabase();
-				} else {
-					installStructure();
-				}
-			}
-		});
-	}
+
 
 	// 初始化数据库
 	function createDatabase() {
@@ -218,7 +212,7 @@
 	//提示程序安装终止信息
 	function stopNotice() {
 		$("#js-monitor-wait-please").html(js_lang.installation_abort);
-	};
+	}
 
 	//显示完成（成功）信息
 	function SuccessMsg() {
@@ -344,39 +338,9 @@
 		});
 	}
 
-	//验证配置信息必填项
-	function showmessage(id, msg) {
-		$('.ui_showmessage').find('.close').parent().remove();
-		$('.control-group').removeClass("error f_error");
 
-		var html = $('<div class="staticalert alert alert-error ui_showmessage"><a class="close" data-dismiss="alert">×</a>' + msg + '</div>');
-		$('#js-ecjia_deploy').before(html);
 
-		$('#' + id).closest("li.control-group").addClass("error f_error");
-		$('body,html').animate({
-			scrollTop: 0
-		}, 300);
 
-		$('.close').on('click', function() {
-			$('.ui_showmessage').find('.close').parent().remove();
-		});
-		window.setTimeout(function() {
-			html.remove()
-		}, 3000);
-	}
-
-	function start_install() {
-		$('.ui_showmessage').find('.close').parent().remove();
-		$('.control-group').removeClass("error f_error");
-		$('body').scrollTop(0).css('height', '100%');
-		$('#js-ecjia_deploy').css('display', 'none');
-		$('.path').children('li').removeClass('current').eq(3).addClass('current');
-
-		progress(0);
-		install();
-		$.cookie('install_step4', 1);
-		return false;
-	}
 
 })(ecjia.front, jQuery);
 

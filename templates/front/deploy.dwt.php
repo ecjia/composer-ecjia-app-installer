@@ -114,7 +114,7 @@
                     <input type="hidden" name="is_create" value="1"/>
                     <input type="hidden" name="database_config" />
                     
-					<input id="ecjia_install" type="button" class="btn primary" value='{t domain="installer"}确认，立即安装{/t} &raquo;' onclick="return ecjia.front.install.start();"/>
+					<input id="ecjia_install" type="button" class="btn primary" value='{t domain="installer"}确认，立即安装{/t} &raquo;' />
 				</form>
 				
 				<div class="ecjia-install-body">

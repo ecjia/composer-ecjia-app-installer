@@ -52,6 +52,7 @@ use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseAccountEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseExistsEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckUserPasswordEvent;
+use Ecjia\App\Installer\BrowserEvent\InstallStartEvent;
 use Ecjia\App\Installer\BrowserEvent\PageEventManager;
 use Ecjia\App\Installer\Exceptions\InstallLockedException;
 use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
@@ -229,7 +230,8 @@ class IndexController extends BaseControllerAbstract
         $page = (new PageEventManager('init'))
             ->addPageHandler(InstallCheckDatabaseAccountEvent::class)
             ->addPageHandler(InstallCheckDatabaseExistsEvent::class)
-            ->addPageHandler(InstallCheckUserPasswordEvent::class);
+            ->addPageHandler(InstallCheckUserPasswordEvent::class)
+            ->addPageHandler(InstallStartEvent::class);
         $this->loadPageScript($page);
 
         $show_timezone  = 'yes';
