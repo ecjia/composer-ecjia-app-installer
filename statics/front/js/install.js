@@ -148,14 +148,14 @@
 
         //显示完成（成功）信息
         SuccessMsg: function() {
-            notice_html += "<span class='install_correct'><img src=" + correct_img + ">"+ js_lang.success + "</span>" + lf;
+            notice_html += "<span class='install_correct'><img src=" + correct_img + " />"+ js_lang.success + "</span>" + lf;
             $('#js-notice').html(notice_html);
         },
 
         //显示错误信息
         ErrorMsg: function(result) {
             stopNotice();
-            notice_html += "<span class='install_error'><img src=" + error_img + ">" + js_lang.fail + "</span>" + lf;
+            notice_html += "<span class='install_error'><img src=" + error_img + " />" + js_lang.fail + "</span>" + lf;
             $("#js-monitor-notice").css('display', "block");
 
             notice_html += "<strong class='m_l30' style='color:red'>"+ js_lang.prompt + result + "</strong>";
@@ -169,12 +169,12 @@
 	app.notice = {
 	    success_notice_template: function (status) {
             let correct_img = $('input[name="correct_img"]').val();
-            return "<span class='install_correct'><img src=" + correct_img + ">"+ status + "</span><br/>";
+            return "<span class='install_correct'><img src=" + correct_img + " />"+ status + "</span><br/>";
         },
 
         error_notice_template: function (status, msg) {
             let error_img = $('input[name="error_img"]').val();
-            return "<span class='install_error'><img src=" + error_img + ">" + status + "</span><br/>" +
+            return "<span class='install_error'><img src=" + error_img + " />" + status + "</span><br/>" +
                 "<strong class='m_l30 ecjia-color-red'>"+ msg + "</strong>";
         },
 
