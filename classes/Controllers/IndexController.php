@@ -49,8 +49,10 @@ namespace Ecjia\App\Installer\Controllers;
 
 use Ecjia\App\Installer\BrowserEvent\AgreeChangeEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
+use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseAccountEvent;
+use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseExistsEvent;
+use Ecjia\App\Installer\BrowserEvent\InstallCheckUserPasswordEvent;
 use Ecjia\App\Installer\BrowserEvent\PageEventManager;
-use Ecjia\App\Installer\BrowserEvent\PageScriptPrint;
 use Ecjia\App\Installer\Exceptions\InstallLockedException;
 use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DNSCheck;
@@ -224,6 +226,11 @@ class IndexController extends BaseControllerAbstract
         $this->checkInstallStep(InstallCheckStatus::STEP2);
         $this->stepInstallStatus(InstallCheckStatus::STEP3);
 
+        $page = (new PageEventManager('init'))
+            ->addPageHandler(InstallCheckDatabaseAccountEvent::class)
+            ->addPageHandler(InstallCheckDatabaseExistsEvent::class)
+            ->addPageHandler(InstallCheckUserPasswordEvent::class);
+        $this->loadPageScript($page);
 
         $show_timezone  = 'yes';
         $timezones      = Timezone::getTimezones();
@@ -346,7 +353,6 @@ class IndexController extends BaseControllerAbstract
         $db_user = trim($this->request->input('db_user'));
         $db_pass = trim($this->request->input('db_pass'));
 
-//        $databases  = Helper::getDataBases($db_host, $db_port, $db_user, $db_pass);
         $installDatabase = new InstallDatabase($db_host, $db_port, $db_user, $db_pass);
         $databases       = $installDatabase->getDataBases();
         if (is_ecjia_error($databases)) {
@@ -386,9 +392,8 @@ class IndexController extends BaseControllerAbstract
         $db_port     = trim($this->request->input('db_port'));
         $db_user     = trim($this->request->input('db_user'));
         $db_pass     = trim($this->request->input('db_pass'));
-        $db_database = trim($this->request->input('dbdatabase'));
+        $db_database = trim($this->request->input('db_database'));
 
-//        $databases  = Helper::getDataBases($db_host, $db_port, $db_user, $db_pass);
         $databases = (new InstallDatabase($db_host, $db_port, $db_user, $db_pass))->getDataBases();
 
         if (is_ecjia_error($databases)) {
@@ -396,9 +401,9 @@ class IndexController extends BaseControllerAbstract
         }
 
         if ($databases->contains($db_database)) {
-            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('is_exist' => true));
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => true));
         } else {
-            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('is_exist' => false));
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => false));
         }
     }
 
