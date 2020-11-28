@@ -117,6 +117,8 @@ class IndexController extends BaseControllerAbstract
         $this->assign('product_name', config('site.shop_name'));
         $this->assign('install_license', config('app-installer::install_license.license'));
 
+        $this->assign('ecjia_step', 1);
+
         return $this->displayAppTemplate('installer', 'front/welcome.dwt');
     }
 
@@ -202,7 +204,7 @@ class IndexController extends BaseControllerAbstract
             $this->assign('dir_permission', $dir_permission);
             $this->assign('check_right', $check_all_right);
 
-//            $this->assign('ecjia_step', 2);
+            $this->assign('ecjia_step', 2);
 
             return $this->displayAppTemplate('installer', 'front/detect.dwt');
         } catch (InstallLockedException $exception) {
