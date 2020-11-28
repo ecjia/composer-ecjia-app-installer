@@ -600,7 +600,7 @@ select {
 	font-size: .92857em;
 }
 
-.ecjia-option .password-error, .confirmpassword-error {
+.ecjia-option .password-error, .confirm-password-error {
 	color: #C62626;
 	margin: 0;
 	font-size: .92857em;
@@ -1000,6 +1000,10 @@ a.operate-reply {
 
 .comment-edit label {
 	display: block;
+}
+
+#ecjia-container {
+    height:auto;
 }
 
 #ecjia-respond {
