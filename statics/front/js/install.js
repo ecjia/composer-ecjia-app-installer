@@ -362,9 +362,9 @@
 
     }
 
-	var lf = "<br />";
-	var notice = null;
-	var notice_html = '';
+	// var lf = "<br />";
+	// var notice = null;
+	// var notice_html = '';
 
 
 
