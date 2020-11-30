@@ -167,6 +167,8 @@
 
 	//消息提示
 	app.notice = {
+	    notice_html: '',
+
 	    success_notice_template: function (status) {
             let correct_img = $('input[name="correct_img"]').val();
             return "<span class='install_correct'><img alt='' src='" + correct_img + "' />"+ status + "</span><br/>";
@@ -188,17 +190,20 @@
         },
 
 	    show: function (html) {
-            $('#js-notice').html(html);
+            app.notice.notice_html += html;
+            $('#js-notice').html(app.notice.notice_html);
         },
         stop: function () {
 
         },
         success: function (html) {
-            $('#js-notice').html(html);
+            app.notice.notice_html += html;
+            $('#js-notice').html(app.notice.notice_html);
         },
         error: function (html) {
+            app.notice.notice_html += html;
             $("#js-monitor-notice").css('display', "block");
-            $('#js-notice').html(html);
+            $('#js-notice').html(app.notice.notice_html);
             $('#js-install-return-once').css('display', 'block');
         },
     }
