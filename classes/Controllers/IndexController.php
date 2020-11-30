@@ -244,10 +244,10 @@ class IndexController extends BaseControllerAbstract
             'install_base_data_action' => RC_Uri::url('installer/install/install_base_data'),
             'install_demo_data_action' => RC_Uri::url('installer/install/install_demo_data'),
             'create_admin_passport_action' => RC_Uri::url('installer/install/do_others'),
-            'do_others_action' => RC_Uri::url('installer/index/create_admin_passport'),
+            'do_others_action' => RC_Uri::url('installer/install/create_admin_passport'),
         ];
         $install_actions_html = collect($install_actions)->map(function ($url, $key) {
-            return '<input type="hidden" name="{$key}" value="{$url}" />';
+            return "<input type=\"hidden\" name=\"{$key}\" value=\"{$url}\" />";
         })->implode(PHP_EOL);
 
 
@@ -421,46 +421,6 @@ class IndexController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => true));
         } else {
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => false));
-        }
-    }
-
-    /**
-     * 创建配置文件
-     */
-    public function create_config_file()
-    {
-        $this->check_installed();
-
-        $db_host  = trim($this->request->input('db_host'));
-        $db_port  = trim($this->request->input('db_port'));
-        $db_user  = trim($this->request->input('db_user'));
-        $db_pass  = trim($this->request->input('db_pass'));
-        $db_name  = trim($this->request->input('db_name'));
-        $prefix   = trim($this->request->input('db_prefix'));
-        $timezone = trim($this->request->input('timezone', 'Asia/Shanghai'));
-
-        $auth_key = Helper::getAuthKey();
-
-        $data = array(
-            'DB_ECJIA_HOST'     => $db_host,
-            'DB_ECJIA_PORT'     => $db_port,
-            'DB_ECJIA_DATABASE' => $db_name,
-            'DB_ECJIA_USERNAME' => $db_user,
-            'DB_ECJIA_PASSWORD' => $db_pass,
-            'DB_ECJIA_PREFIX'   => $prefix,
-            'TIMEZONE'    => $timezone,
-            'AUTH_KEY'    => $auth_key,
-        );
-
-        $installEnv = new InstallEnvConfig();
-        $installEnv->createEnv();
-        $result = $installEnv->modifyEnv($data);
-
-        if (is_ecjia_error($result)) {
-            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } else {
-            $percent = $this->get_percent('create_config_file');
-            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         }
     }
 

@@ -208,6 +208,7 @@
         //开启
 	    reset: function () {
 	        let val = 0;
+            let html = val + '%';
             let progress_bar_el = $('.progress-bar');
             progress_bar_el.css('width', val + '%');
             progress_bar_el.html(html);
@@ -215,12 +216,14 @@
 
         complete: function () {
             let val = 100;
+            let html = val + '%';
             let progress_bar_el = $('.progress-bar');
             progress_bar_el.css('width', val + '%');
             progress_bar_el.html(html);
         },
 
         update: function (val) {
+            let html = val + '%';
             let progress_bar_el = $('.progress-bar');
             progress_bar_el.css('width', val + '%');
             progress_bar_el.html(html);
@@ -231,7 +234,15 @@
 	app.task = {
         //安装程序启动
 	    installStartTask: function (next) {
+            $('.ui_showmessage').find('.close').parent().remove();
+            $('.control-group').removeClass("error f_error");
+            $('body').scrollTop(0).css('height', '100%');
+            $('#js-ecjia_deploy').css('display', 'none');
+            $('.path').children('li').removeClass('current').eq(3).addClass('current');
+
+	        app.progress_bar.reset();
             app.notice.open();
+
             next();
         },
 

@@ -91,7 +91,7 @@ class InstallStartEvent implements BrowserEventInterface
             return false;
         }
     
-        ecjia.front.install.start_install();
+        // ecjia.front.install.start_install();
         
         var middleware = ecjia.middleware();
         middleware.use(ecjia.front.task.installStartTask);
