@@ -237,11 +237,26 @@ class IndexController extends BaseControllerAbstract
         $show_timezone  = 'yes';
         $timezones      = Timezone::getTimezones();
 
+        $install_actions = [
+            'create_config_file_action' => RC_Uri::url('installer/install/create_config_file'),
+            'create_database_action' => RC_Uri::url('installer/install/create_database'),
+            'install_structure_action' => RC_Uri::url('installer/install/install_structure'),
+            'install_base_data_action' => RC_Uri::url('installer/install/install_base_data'),
+            'install_demo_data_action' => RC_Uri::url('installer/install/install_demo_data'),
+            'create_admin_passport_action' => RC_Uri::url('installer/install/do_others'),
+            'do_others_action' => RC_Uri::url('installer/index/create_admin_passport'),
+        ];
+        $install_actions_html = collect($install_actions)->map(function ($url, $key) {
+            return '<input type="hidden" name="{$key}" value="{$url}" />';
+        })->implode(PHP_EOL);
+
+
         $this->assign('timezones', $timezones);
         $this->assign('show_timezone', $show_timezone);
         $this->assign('local_timezone', Timezone::getLocalTimezone());
         $this->assign('correct_img', RC_App::apps_url('statics/front/images/correct.png', $this->__FILE__));
         $this->assign('error_img', RC_App::apps_url('statics/front/images/error.png', $this->__FILE__));
+        $this->assign('install_actions_html', $install_actions_html);
 
         $this->assign('ecjia_step', 3);
 
