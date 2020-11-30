@@ -54,6 +54,19 @@ class InstallMigrationFile
     }
 
     /**
+     * 获取全部安装的脚本数量
+     */
+    public function getMigrationFilesCount()
+    {
+        try {
+            return $this->migrate->getMigrationFilesCount();
+        }
+        catch (QueryException $e) {
+            return new ecjia_error($e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
      * 填充数据表基础数据
      *
      * @return  boolean | ecjia_error    成功返回true，失败返回ecjia_error

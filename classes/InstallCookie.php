@@ -13,6 +13,7 @@ class InstallCookie
         'install_agree',
         'install_step',
         'install_config',
+        'install_offset',
     ];
 
     public function setInstallStep($value)
@@ -23,6 +24,16 @@ class InstallCookie
     public function getInstallStep()
     {
         return RC_Cookie::get('install_step');
+    }
+
+    public function setInstallOffset($value)
+    {
+        RC_Cookie::queue(RC_Cookie::make('install_offset', $value, 30));
+    }
+
+    public function getInstallOffset()
+    {
+        return intval(RC_Cookie::get('install_offset'));
     }
 
     /**
