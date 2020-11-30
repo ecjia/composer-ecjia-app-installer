@@ -84,7 +84,7 @@
 	                      	<li>
 	                   			<label class="ecjia-label" for="zones">{t domain="installer"}设置时区{/t}</label>
 	                   			<div class="choose_list">
-									<select name="js-timezones" id="js-timezones">
+									<select name="timezone" id="timezone">
 										<!-- {foreach from=$timezones item=item key=key} -->
 											<option value="{$key}" {if $key == $local_timezone } selected="true"{/if}>{$item}</option>
 										<!-- {/foreach} -->
@@ -102,17 +102,11 @@
                     
                     <input type="hidden" name="index" value="{RC_Uri::url('installer/index/init')}" />
                     <input type="hidden" name="done" value="{RC_Uri::url('installer/index/finish')}" />
-                    <input type="hidden" name="create_config_file" value="{RC_Uri::url('installer/index/create_config_file')}" />
-                    <input type="hidden" name="create_database" value="{RC_Uri::url('installer/index/create_database')}" />
-                   	<input type="hidden" name="install_structure" value="{RC_Uri::url('installer/index/install_structure')}" />
-                    <input type="hidden" name="install_base_data" value="{RC_Uri::url('installer/index/install_base_data')}" />
-                    <input type="hidden" name="install_demo_data" value="{RC_Uri::url('installer/index/install_demo_data')}" />
-                    <input type="hidden" name="create_admin_passport" value="{RC_Uri::url('installer/index/create_admin_passport')}" />
-                    <input type="hidden" name="do_others" value="{RC_Uri::url('installer/index/do_others')}" />
                     <input type="hidden" name="correct_img" value="{$correct_img}" />
                     <input type="hidden" name="error_img" value="{$error_img}" />
                     <input type="hidden" name="is_create" value="1"/>
                     <input type="hidden" name="database_config" />
+                    {$install_actions_html}
                     
 					<input id="ecjia_install" type="button" class="btn primary" value='{t domain="installer"}确认，立即安装{/t} &raquo;' />
 				</form>
