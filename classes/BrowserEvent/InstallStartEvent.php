@@ -11,8 +11,7 @@ class InstallStartEvent implements BrowserEventInterface
 
     public function __construct()
     {
-
-
+        RC_Script::enqueue('ecjia-middleware');
     }
 
     public function __invoke()
@@ -93,6 +92,17 @@ class InstallStartEvent implements BrowserEventInterface
         }
     
         ecjia.front.install.start_install();
+        
+        var middleware = ecjia.middleware();
+        middleware.use(ecjia.front.task.installStartTask);
+        middleware.use(ecjia.front.task.createConfigFileTask);
+        middleware.use(ecjia.front.task.createDatabaseTask);
+        middleware.use(ecjia.front.task.installStructureTask);
+        middleware.use(ecjia.front.task.installStructureMoreTask);
+        middleware.use(ecjia.front.task.installBaseDataTask);
+        middleware.use(ecjia.front.task.installDemoDataTask);
+        middleware.handleRequest();
+        
     
     });
     
