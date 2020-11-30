@@ -254,15 +254,6 @@
         //创建配置文件
         createConfigFileTask: function(next) {
             console.log('createConfigFileTask');
-            // var tzs = $("#js-timezones");
-            // var tz = tzs ? "timezone=" + tzs.val() : "";
-            // var params2 = "db_host=" + $("#dbhost").val() + "&"
-            //     + "db_port=" + $("#dbport").val() + "&"
-            //     + "db_user=" + $("#dbuser").val() + "&"
-            //     + "db_pass=" + $("#dbpassword").val() + "&"
-            //     + "db_name=" + $("#dbdatabase").val() + "&"
-            //     + "db_prefix=" + $("#dbprefix").val() + "&" + tz;
-
             let params = {
                 db_host: $("#db_host").val(),
                 db_port: $("#db_port").val(),
@@ -273,28 +264,16 @@
                 timezone: $('#timezone').val()
             };
 
-            // notice_html = '<div class="install_notice">'+ js_lang.create_configuration + '</div>';
-            // $('#js-notice').html(notice_html);
-
             app.notice.show(app.notice.install_notice_template(js_lang.create_configuration));
 
             let url = $('input[name="create_config_file_action"]').val();
-            // var is_create = $('input[name="is_create"]').val();
             $.post(url, params, function(result) {
                 if (result.state === 'error') {
                     app.notice.error(app.notice.error_notice_template(js_lang.fail, result.message));
                 } else {
-                    // SuccessMsg();
                     app.notice.success(app.notice.success_notice_template(js_lang.success));
                     app.progress_bar.update(result.percent);
-                    // progress(result.percent);
-
                     next();
-                    // if (is_create === 1) {
-                    //     createDatabase();
-                    // } else {
-                    //     installStructure();
-                    // }
                 }
             });
         },
@@ -302,6 +281,14 @@
         // 初始化数据库
         createDatabaseTask: function(next) {
             console.log('createDatabaseTask');
+
+            let is_create = $('input[name="is_create"]').val();
+            if (is_create === 1) {
+                createDatabase();
+            } else {
+                next();
+            }
+
             var params = "db_host=" + $("#dbhost").val() + "&"
                 + "db_port=" + $("#dbport").val() + "&"
                 + "db_user=" + $("#dbuser").val() + "&"
