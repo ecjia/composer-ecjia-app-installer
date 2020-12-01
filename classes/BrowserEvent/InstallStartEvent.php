@@ -12,6 +12,7 @@ class InstallStartEvent implements BrowserEventInterface
     public function __construct()
     {
         RC_Script::enqueue('ecjia-middleware');
+        RC_Script::enqueue('js-sprintf');
     }
 
     public function __invoke()
