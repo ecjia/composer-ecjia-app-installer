@@ -193,19 +193,50 @@
             app.notice.notice_html += html;
             $('#js-notice').html(app.notice.notice_html);
         },
+
         stop: function () {
 
         },
+
         success: function (html) {
             app.notice.notice_html += html;
             $('#js-notice').html(app.notice.notice_html);
         },
+
         error: function (html) {
             app.notice.notice_html += html;
             $("#js-monitor-notice").css('display', "block");
             $('#js-notice').html(app.notice.notice_html);
             $('#js-install-return-once').css('display', 'block');
         },
+
+        addSubject: function (text) {
+            app.notice.show(app.notice.install_notice_template(text));
+        },
+
+        addErrorMessage: function (msg) {
+            app.notice.error(app.notice.error_notice_template(js_lang.fail, msg));
+        },
+
+        addSuccessMessage: function () {
+            app.notice.success(app.notice.success_notice_template(js_lang.success));
+        },
+
+        addNumTips: function (num) {
+            let text = sprintf(js_lang.remainder, num);
+            let html = "<span class='install_correct' id='numtips'>"+ text + "</span>";
+            $('#js-notice').append(html);
+        },
+
+        updateNumTips: function (num) {
+            let text = sprintf(js_lang.remainder, num);
+            $('#numtips').text(text);
+        },
+
+        removeNumTips: function () {
+            $('#numtips').remove();
+        }
+
     }
 
 	//安装进度条
@@ -264,14 +295,14 @@
                 timezone: $('#timezone').val()
             };
 
-            app.notice.show(app.notice.install_notice_template(js_lang.create_configuration));
+            app.notice.addSubject(js_lang.create_configuration)
 
             let url = $('input[name="create_config_file_action"]').val();
             $.post(url, params, function(result) {
                 if (result.state === 'error') {
-                    app.notice.error(app.notice.error_notice_template(js_lang.fail, result.message));
+                    app.notice.addErrorMessage(result.message);
                 } else {
-                    app.notice.success(app.notice.success_notice_template(js_lang.success));
+                    app.notice.addSuccessMessage();
                     app.progress_bar.update(result.percent);
                     next();
                 }
@@ -283,72 +314,133 @@
             console.log('createDatabaseTask');
 
             let is_create = $('input[name="is_create"]').val();
-            if (is_create === 1) {
-                createDatabase();
+            console.log('is_create');
+            console.log(is_create);
+            if (parseInt(is_create) === 1) {
+                // createDatabase();
+
+                app.notice.addSubject(js_lang.create_database)
+
+                let params = {
+                    db_host: $("#db_host").val(),
+                    db_port: $("#db_port").val(),
+                    db_user: $("#db_user").val(),
+                    db_pass: $("#db_password").val(),
+                    db_database: $('#db_database').val(),
+                    db_prefix: $('#db_prefix').val(),
+                    timezone: $('#timezone').val()
+                };
+
+                let url = $('input[name="create_database_action"]').val();
+                $.post(url, params, function(result) {
+                    if (result.state === 'error') {
+                        // ErrorMsg(result.message);
+                        app.notice.addErrorMessage(result.message);
+                    } else {
+                        // SuccessMsg();
+                        app.notice.addSuccessMessage();
+                        app.progress_bar.update(result.percent);
+                        // progress(result.percent);
+                        // installStructure();
+                        next();
+                    }
+                });
+
             } else {
                 next();
             }
 
-            var params = "db_host=" + $("#dbhost").val() + "&"
-                + "db_port=" + $("#dbport").val() + "&"
-                + "db_user=" + $("#dbuser").val() + "&"
-                + "db_pass=" + $("#dbpassword").val() + "&"
-                + "db_name=" + $("#dbdatabase").val();
+            // var params = "db_host=" + $("#dbhost").val() + "&"
+            //     + "db_port=" + $("#dbport").val() + "&"
+            //     + "db_user=" + $("#dbuser").val() + "&"
+            //     + "db_pass=" + $("#dbpassword").val() + "&"
+            //     + "db_name=" + $("#dbdatabase").val();
 
-            notice_html += '<div class="install_notice">'+ js_lang.create_database + '</div>', $('#js-notice').html(notice_html);
 
-            var url = $('input[name="create_database"]').val();
-            $.post(url, params, function(result) {
-                if (result.state === 'error') {
-                    ErrorMsg(result.message);
-                } else {
-                    SuccessMsg();
-                    progress(result.percent);
-                    installStructure();
-                }
-            });
+
+            // notice_html += '<div class="install_notice">'+ js_lang.create_database + '</div>';
+            //     $('#js-notice').html(notice_html);
+
+
         },
 
         //安装数据库结构
         installStructureTask: function(next) {
             console.log('installStructureTask');
-            notice_html += '<div class="install_notice">'+ js_lang.install_database_structure + '</div>';
-            $('#js-notice').html(notice_html);
 
-            var url = $('input[name="install_structure"]').val();
-            $.post(url, '', function(result) {
+            // notice_html += '<div class="install_notice">'+ js_lang.install_database_structure + '</div>';
+            // $('#js-notice').html(notice_html);
+
+            app.notice.addSubject(js_lang.install_database_structure)
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val()
+            };
+
+            let url = $('input[name="install_structure_action"]').val();
+            $.post(url, params, function(result) {
                 if (result.state === 'error') {
-                    ErrorMsg(result.message);
+                    app.notice.addErrorMessage(result.message);
+                    // ErrorMsg(result.message);
                 } else {
-                    progress(result.percent);
+                    app.progress_bar.update(result.percent);
+                    // progress(result.percent);
                     if (result.more > 0) {
-                        notice_text = "<span class='install_correct' id='numtips'>"+ js_lang.remainder + result.more + js_lang.piece + " ...</span>" ;
-                        $('#js-notice').append(notice_text);
-                        installStructureMore();
+                        // sprintf(js_lang.remainder, result.more);
+                        // notice_text = "<span class='install_correct' id='numtips'>"+ js_lang.remainder + result.more + js_lang.piece + " ...</span>" ;
+                        // $('#js-notice').append(notice_text);
+                        app.notice.addNumTips(result.more);
+                        app.task.installStructureSubTask(next);
                     } else {
-                        SuccessMsg();
-                        installBaseData();
+                        // SuccessMsg();
+                        app.notice.addSuccessMessage();
+                        // installBaseData();
+                        next();
                     }
                 }
             });
         },
 
-        installStructureMoreTask: function(next) {
-            console.log('installStructureMoreTask');
-            var url = $('input[name="install_structure"]').val();
-            $.post(url, '', function(result) {
+        installStructureSubTask: function(next) {
+            console.log('installStructureSubTask');
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val()
+            };
+
+            let url = $('input[name="install_structure_action"]').val();
+            $.post(url, params, function(result) {
                 if (result.state === 'error') {
-                    ErrorMsg(result.message);
+                    // ErrorMsg(result.message);
+                    app.notice.addErrorMessage(result.message);
                 } else {
-                    progress(result.percent);
+                    app.progress_bar.update(result.percent);
+
                     if (result.more > 0) {
-                        var notice_text = js_lang.remainder + result.more + js_lang.piece + " ..." ;
-                        $('#numtips').text(notice_text);
-                        installStructureMore();
+                        // var notice_text = js_lang.remainder + result.more + js_lang.piece + " ..." ;
+                        // $('#numtips').text(notice_text);
+
+                        app.notice.updateNumTips(result.more);
+                        app.task.installStructureSubTask(next);
                     } else {
-                        $('#numtips').remove();
-                        SuccessMsg();
-                        installBaseData();
+                        // $('#numtips').remove();
+                        app.notice.removeNumTips();
+                        app.notice.addSuccessMessage();
+                        // SuccessMsg();
+                        // installBaseData();
+                        next();
                     }
                 }
             });
@@ -357,22 +449,34 @@
         //安装基础数据
         installBaseDataTask: function(next) {
             console.log('installBaseDataTask');
-            notice_html += '<div class="install_notice">' + js_lang.install_basic_data + '</div>';
-            $('#js-notice').html(notice_html);
 
-            var url = $('input[name="install_base_data"]').val();
-            $.post(url, '', function(result) {
+            app.notice.addSubject(js_lang.install_basic_data)
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val()
+            };
+
+            // notice_html += '<div class="install_notice">' + js_lang.install_basic_data + '</div>';
+            // $('#js-notice').html(notice_html);
+
+            let url = $('input[name="install_base_data_action"]').val();
+            $.post(url, params, function(result) {
                 if (result.state === 'error') {
-                    ErrorMsg(result.message);
+                    // ErrorMsg(result.message);
+                    app.notice.addErrorMessage(result.message);
                 } else {
-                    progress(result.percent);
-                    SuccessMsg();
-                    if ($("input[name='js-install-demo']").attr("checked")) {
-                        installDemoData();
-                    } else {
-                        createAdminPassport();
-                    }
+                    // progress(result.percent);
+                    app.progress_bar.update(result.percent);
+                    // SuccessMsg();
+                    app.notice.addSuccessMessage();
 
+                    next();
                 }
             });
         },
@@ -380,45 +484,101 @@
         //安装演示数据
         installDemoDataTask: function(next) {
             console.log('installDemoDataTask');
-            notice_html += '<div class="install_notice">'+ js_lang.install_demo_data + '</div>';
-            $('#js-notice').html(notice_html);
 
-            var url = $('input[name="install_demo_data"]').val();
-            $.post(url, '', function(result) {
-                if (result.state === 'error') {
-                    ErrorMsg(result.message);
-                } else {
-                    progress(result.percent);
-                    SuccessMsg();
-                    createAdminPassport();
-                }
-            });
+            if ($("input[name='js-install-demo']").attr("checked")) {
+                // installDemoData();
+
+                app.notice.addSubject(js_lang.install_demo_data)
+
+                let params = {
+                    db_host: $("#db_host").val(),
+                    db_port: $("#db_port").val(),
+                    db_user: $("#db_user").val(),
+                    db_pass: $("#db_password").val(),
+                    db_database: $('#db_database').val(),
+                    db_prefix: $('#db_prefix').val(),
+                    timezone: $('#timezone').val()
+                };
+
+                let url = $('input[name="install_demo_data_action"]').val();
+                $.post(url, params, function(result) {
+                    if (result.state === 'error') {
+                        // ErrorMsg(result.message);
+                        app.notice.addErrorMessage(result.message);
+                    } else {
+                        // progress(result.percent);
+                        app.progress_bar.update(result.percent);
+                        // SuccessMsg();
+                        app.notice.addSuccessMessage();
+                        // createAdminPassport();
+                        next();
+                    }
+                });
+
+            } else {
+                // createAdminPassport();
+                next();
+            }
+
+            // notice_html += '<div class="install_notice">'+ js_lang.install_demo_data + '</div>';
+            // $('#js-notice').html(notice_html);
+
+
         },
 
         //创建管理员帐号
         createAdminPassportTask: function(next) {
             console.log('createAdminPassportTask');
-            notice_html += '<div class="install_notice">'+ js_lang.create_administrator_account + '</div>';
-            $('#js-notice').html(notice_html);
 
-            var params = "admin_name=" + $("#username").val() + "&"
-                + "admin_password=" + $("#userpassword").val() + "&"
-                + "admin_password2=" + $("#confirmpassword").val() + "&"
-                + "admin_email=" + $("#usermail").val();
+            // notice_html += '<div class="install_notice">'+ js_lang.create_administrator_account + '</div>';
+            // $('#js-notice').html(notice_html);
 
-            var url = $('input[name="create_admin_passport"]').val();
+            app.notice.addSubject(js_lang.create_administrator_account)
+
+            // var params = "admin_name=" + $("#username").val() + "&"
+            //     + "admin_password=" + $("#userpassword").val() + "&"
+            //     + "admin_password2=" + $("#confirmpassword").val() + "&"
+            //     + "admin_email=" + $("#usermail").val();
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val(),
+                admin_name: $("#user_name").val(),
+                admin_password: $("#user_password").val(),
+                admin_password_confirm: $("#user_confirm_password").val(),
+                admin_email: $("#user_mail").val()
+            };
+
+            let url = $('input[name="create_admin_passport_action"]').val();
             $.post(url, params, function(result) {
                 if (result.state === 'error') {
-                    ErrorMsg(result.message);
+                    // ErrorMsg(result.message);
+                    app.notice.addErrorMessage(result.message);
                 } else {
-                    progress(100);
-                    SuccessMsg();
-                    var url = $('input[name="done"]').val();
-                    window.setTimeout(function() {
-                        location.href = url;
-                    }, 1000);
+                    // progress(100);
+                    app.progress_bar.update(result.percent);
+                    app.notice.addSuccessMessage();
+                    // SuccessMsg();
+                    next();
                 }
             });
+        },
+
+        installFinishTask: function (next) {
+            console.log('installFinishTask');
+
+            let url = $('input[name="install_finish_action"]').val();
+            window.setTimeout(function() {
+                location.href = url;
+            }, 1000);
+
+            next();
+
         }
 
     }

@@ -243,8 +243,10 @@ class IndexController extends BaseControllerAbstract
             'install_structure_action' => RC_Uri::url('installer/install/install_structure'),
             'install_base_data_action' => RC_Uri::url('installer/install/install_base_data'),
             'install_demo_data_action' => RC_Uri::url('installer/install/install_demo_data'),
-            'create_admin_passport_action' => RC_Uri::url('installer/install/do_others'),
-            'do_others_action' => RC_Uri::url('installer/install/create_admin_passport'),
+            'create_admin_passport_action' => RC_Uri::url('installer/install/create_admin_passport'),
+            'do_others_action' => RC_Uri::url('installer/install/do_others'),
+            'install_index_action' => RC_Uri::url('installer/index/init'), //安装首页
+            'install_finish_action' => RC_Uri::url('installer/index/finish'), //安装完成页面
         ];
         $install_actions_html = collect($install_actions)->map(function ($url, $key) {
             return "<input type=\"hidden\" name=\"{$key}\" value=\"{$url}\" />";
@@ -418,9 +420,9 @@ class IndexController extends BaseControllerAbstract
         }
 
         if ($databases->contains($db_database)) {
-            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => true));
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => 1));
         } else {
-            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => false));
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => 0));
         }
     }
 

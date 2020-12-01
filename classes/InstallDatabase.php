@@ -82,8 +82,7 @@ class InstallDatabase
                 return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
             }
 
-            $result = $conn->unprepared("CREATE DATABASE `$database`");
-            return true;
+            return $conn->unprepared("CREATE DATABASE `$database`");
         }
         catch (QueryException $e) {
             return new ecjia_error('cannt_create_database', __('连接数据库失败，无法创建数据库', 'installer'));

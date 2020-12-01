@@ -85,8 +85,8 @@ return array(
         'success'   => __('成功', 'installer'),
         'fail'      => __('失败', 'installer'),
         'prompt'    => __('提示：', 'installer'),
-        'remainder' => __('剩余', 'installer'),
-        'piece'     => __('个', 'installer'),
+        'remainder' => __('剩余<strong>%s</strong>个...', 'installer'),
+//        'piece'     => __('个', 'installer'),
 
         'install_database_structure' => __('安装数据库结构', 'installer'),
 

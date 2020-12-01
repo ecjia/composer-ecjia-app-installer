@@ -98,9 +98,10 @@ class InstallStartEvent implements BrowserEventInterface
         middleware.use(ecjia.front.task.createConfigFileTask);
         middleware.use(ecjia.front.task.createDatabaseTask);
         middleware.use(ecjia.front.task.installStructureTask);
-        middleware.use(ecjia.front.task.installStructureMoreTask);
         middleware.use(ecjia.front.task.installBaseDataTask);
         middleware.use(ecjia.front.task.installDemoDataTask);
+        middleware.use(ecjia.front.task.createAdminPassportTask);
+        middleware.use(ecjia.front.task.installFinishTask);
         middleware.handleRequest();
         
     

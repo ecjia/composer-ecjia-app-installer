@@ -46,7 +46,7 @@ class InstallCheckDatabaseExistsEvent implements BrowserEventInterface
             data: params,
             async: false,
             success: function(result) {
-                if (result.db_is_exist === true) {
+                if (parseInt(result.db_is_exist) === 1) {
                     smoke.confirm(ecjia_lang.database_name_already_exists, function(event) {
                         if (event) {
                             $('input[name="is_create"]').val(0); //不创建数据库
