@@ -376,7 +376,15 @@
 	        app.progress_bar.reset();
             app.notice.open();
 
-            next();
+            let url = $('input[name="install_start_action"]').val();
+            $.post(url, '', function(result) {
+                if (result.state === 'error') {
+                    app.notice.addErrorMessage(result.message);
+                } else {
+                    app.progress_bar.update(result.percent);
+                    next();
+                }
+            });
         },
 
         //创建配置文件
@@ -411,7 +419,7 @@
             console.log('createDatabaseTask');
 
             let is_create = $('input[name="is_create"]').val();
-     
+
             if (parseInt(is_create) === 1) {
                 // createDatabase();
 
