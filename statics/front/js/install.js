@@ -187,6 +187,13 @@
         open: function () {
             $("#js-monitor").css('display', 'block');
             $('#js-monitor-notice').css('display', 'block');
+            //清除之前的缓存数据
+            app.notice.clear();
+        },
+
+        clear: function () {
+            app.notice.notice_html = '';
+            $('#js-notice').html(app.notice.notice_html);
         },
 
 	    show: function (html) {
