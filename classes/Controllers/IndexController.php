@@ -78,6 +78,7 @@ use Ecjia\App\Installer\InstallChecker\InstallChecker;
 use Ecjia\App\Installer\InstallChecker\InstallCheckStatus;
 use Ecjia\App\Installer\InstallCookie;
 use Ecjia\App\Installer\InstallDatabase;
+use Ecjia\App\Installer\Middleware\CheckInstalledMiddleware;
 use Ecjia\App\Installer\Timezone;
 use RC_App;
 use RC_Hook;
@@ -98,6 +99,8 @@ class IndexController extends BaseControllerAbstract
         set_time_limit(0);
 
         $this->cookie = new InstallCookie();
+
+        $this->middleware(CheckInstalledMiddleware::class);
     }
 
     /**
@@ -105,8 +108,7 @@ class IndexController extends BaseControllerAbstract
      */
     public function init()
     {
-        $this->check_installed();
-
+        //初次进入，清空cookie
         $this->cookie->clear();
 
         $page = (new PageEventManager('init'))->addPageHandler(AgreeChangeEvent::class)
@@ -142,7 +144,6 @@ class IndexController extends BaseControllerAbstract
     public function detect()
     {
         try {
-            $this->check_installed();
             $this->checkInstallStep(InstallCheckStatus::STEP1);
             $this->stepInstallStatus(InstallCheckStatus::STEP2);
 
@@ -220,7 +221,6 @@ class IndexController extends BaseControllerAbstract
      */
     public function deploy()
     {
-        $this->check_installed();
         $this->checkInstallStep(InstallCheckStatus::STEP2);
         $this->stepInstallStatus(InstallCheckStatus::STEP3);
 
@@ -373,8 +373,6 @@ class IndexController extends BaseControllerAbstract
      */
     public function check_db_correct()
     {
-        $this->check_installed();
-
         $db_host = trim($this->request->input('db_host'));
         $db_port = trim($this->request->input('db_port'));
         $db_user = trim($this->request->input('db_user'));
@@ -413,8 +411,6 @@ class IndexController extends BaseControllerAbstract
      */
     public function check_db_exists()
     {
-        $this->check_installed();
-
         $db_host     = trim($this->request->input('db_host'));
         $db_port     = trim($this->request->input('db_port'));
         $db_user     = trim($this->request->input('db_user'));
@@ -433,140 +429,6 @@ class IndexController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('db_is_exist' => 0));
         }
     }
-
-//    /**
-//     * 创建数据库
-//     */
-//    public function create_database()
-//    {
-//        $this->check_installed();
-//
-//        $db_host = trim($this->request->input('db_host'));
-//        $db_port = trim($this->request->input('db_port'));
-//        $db_user = trim($this->request->input('db_user'));
-//        $db_pass = trim($this->request->input('db_pass'));
-//        $db_name = trim($this->request->input('db_name'));
-//
-//        $result = (new InstallDatabase($db_host, $db_port, $db_user, $db_pass))->createDatabase($db_name);
-//
-//        if (is_ecjia_error($result)) {
-//            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        } else {
-//            $percent = $this->get_percent('create_database');
-//            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
-//        }
-//    }
-
-//    /**
-//     * 安装数据库结构
-//     */
-//    public function install_structure()
-//    {
-//        $this->check_installed();
-//
-//        $limit = 20;
-//
-//        $migrate = new InstallMigrationFile();
-//
-//        $result = $migrate->installStructure($limit);
-//
-//        if (is_ecjia_error($result)) {
-//            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        //还剩余多少个脚本未执行
-//        $over = $migrate->getWillMigrationFilesCount();
-//
-//        if (is_ecjia_error($over)) {
-//            return $this->showmessage($over->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//        $more = 0;
-//        if ($over > 0) {
-//            $more = $over;
-//        }
-//
-//        $percent = $this->get_percent('install_structure');
-//        return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent, 'more' => $more));
-//    }
-
-//    /**
-//     * 安装基本数据
-//     */
-//    public function install_base_data()
-//    {
-//        $this->check_installed();
-//
-//        $result = Helper::installBaseData();
-//
-//        if (is_ecjia_error($result)) {
-//            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        } else {
-//            $percent = $this->get_percent('install_base_data');
-//            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
-//        }
-//    }
-
-//    /**
-//     * 安装演示数据
-//     */
-//    public function install_demo_data()
-//    {
-//        $this->check_installed();
-//
-//        $result = Helper::installDemoData();
-//
-//        if (is_ecjia_error($result)) {
-//            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        } else {
-//            $percent = $this->get_percent('install_demo_data');
-//            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
-//        }
-//    }
-
-//    /**
-//     * 创建管理员
-//     */
-//    public function create_admin_passport()
-//    {
-//        $this->check_installed();
-//
-//        $admin_name      = isset($_POST['admin_name']) ? trim($_POST['admin_name']) : '';
-//        $admin_password  = isset($_POST['admin_password']) ? trim($_POST['admin_password']) : '';
-//        $admin_password2 = isset($_POST['admin_password2']) ? trim($_POST['admin_password2']) : '';
-//        $admin_email     = isset($_POST['admin_email']) ? trim($_POST['admin_email']) : '';
-//
-//        RC_Cache::app_cache_set('admin_name', $admin_name, 'install');
-//        RC_Cache::app_cache_set('admin_password', $admin_password, 'install');
-//
-//        if (!$admin_name) {
-//            return $this->showmessage(__('管理员名称不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        if (!$admin_password) {
-//            return $this->showmessage(__('密码不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        if (!(strlen($admin_password) >= 8 && preg_match("/\d+/", $admin_password) && preg_match("/[a-zA-Z]+/", $admin_password))) {
-//            return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        if (!(strlen($admin_password2) >= 8 && preg_match("/\d+/", $admin_password2) && preg_match("/[a-zA-Z]+/", $admin_password2))) {
-//            return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        if ($admin_password != $admin_password2) {
-//            return $this->showmessage(__('密码不相同', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        }
-//
-//        $result = Helper::createAdminPassport($admin_name, $admin_password, $admin_email);
-//
-//        if (is_ecjia_error($result)) {
-//            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-//        } else {
-//            $percent = $this->get_percent('create_admin_passport');
-//            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
-//        }
-//    }
 
     /**
      * 检查操作步骤
@@ -626,19 +488,6 @@ class IndexController extends BaseControllerAbstract
         }
     }
 
-//    /**
-//     * 清除流程cookie
-//     */
-//    private function unset_cookie()
-//    {
-//        setcookie('install_step1', '', time() - 3600);
-//        setcookie('install_step2', '', time() - 3600);
-//        setcookie('install_step3', '', time() - 3600);
-//        setcookie('install_step4', '', time() - 3600);
-//        setcookie('install_config', '', time() - 3600);
-//        setcookie('agree', '', time() - 3600);
-//    }
-
     /**
      * 设置安装步骤状态
      * @param $status
@@ -650,33 +499,6 @@ class IndexController extends BaseControllerAbstract
         $this->cookie->setInstallStep($install_step);
     }
 
-//    private function get_percent($step)
-//    {
-//
-//        $sqlcount = count(scandir(royalcms('path') . '/content/database/migrations')) - 2;
-//
-//        if ($step == 'create_config_file') {
-//            $past = 20;
-//        } else if ($step == 'create_database') {
-//            $past = 40;
-//        } else if ($step == 'install_structure') {
-//            $over = Helper::getWillMigrationFilesCount();
-//            if (!is_ecjia_error($over))
-//                $past = 40 + $sqlcount - $over;
-//        } else if ($step == 'install_base_data') {
-//            $past = 40 + $sqlcount + 20;
-//        } else if ($step == 'install_demo_data') {
-//            $past = 40 + $sqlcount + 40;
-//        } else if ($step == 'create_admin_passport') {
-//            //             $past = 4 +  $_SESSION['temp']['sqlcount'] + 6;
-//            return 100;
-//        }
-//        $total = $sqlcount + 20 + 20 + 20 + 20;
-//
-//
-//        return $percent = floor($past / $total * 100);
-//
-//    }
 }
 
 //end
