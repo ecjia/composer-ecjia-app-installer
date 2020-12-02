@@ -411,8 +411,7 @@
             console.log('createDatabaseTask');
 
             let is_create = $('input[name="is_create"]').val();
-            console.log('is_create');
-            console.log(is_create);
+     
             if (parseInt(is_create) === 1) {
                 // createDatabase();
 
