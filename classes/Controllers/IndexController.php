@@ -237,6 +237,7 @@ class IndexController extends BaseControllerAbstract
         $timezones     = Timezone::getTimezones();
 
         $install_actions      = [
+            'check_admin_password_action'  => RC_Uri::url('installer/install/check_admin_password'),
             'install_start_action'         => RC_Uri::url('installer/install/install_start'),
             'create_config_file_action'    => RC_Uri::url('installer/install/create_config_file'),
             'create_database_action'       => RC_Uri::url('installer/install/create_database'),

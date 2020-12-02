@@ -47,6 +47,7 @@
 
 namespace Ecjia\App\Installer\Controllers;
 
+use CreateAdminPassportTask;
 use Ecjia\App\Installer\BrowserEvent\AgreeChangeEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseAccountEvent;
@@ -102,6 +103,40 @@ class InstallController extends BaseControllerAbstract
         set_time_limit(0);
 
         $this->cookie = new InstallCookie();
+    }
+
+    public function check_admin_password()
+    {
+        try {
+            $admin_name             = trim($this->request->input('admin_name'));
+            $admin_password         = trim($this->request->input('admin_password'));
+            $admin_password_confirm = trim($this->request->input('admin_password_confirm'));
+            $admin_email            = trim($this->request->input('admin_email'));
+
+            if (empty($admin_name)) {
+                return $this->showmessage(__('管理员名称不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            if (empty($admin_password)) {
+                return $this->showmessage(__('密码不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            if (!(strlen($admin_password) >= 8 && preg_match("/\d+/", $admin_password) && preg_match("/[a-zA-Z]+/", $admin_password))) {
+                return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            if (!(strlen($admin_password_confirm) >= 8 && preg_match("/\d+/", $admin_password_confirm) && preg_match("/[a-zA-Z]+/", $admin_password_confirm))) {
+                return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            if ($admin_password != $admin_password_confirm) {
+                return $this->showmessage(__('密码不相同', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+        } catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -200,7 +235,7 @@ class InstallController extends BaseControllerAbstract
 //        $this->check_installed();
 
 //            $config  = config('database');
-            $default = royalcms('config')->get('database.connections.default');
+
 
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
@@ -210,6 +245,8 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
+            $default = royalcms('config')->get('database.connections.default');
+
             $default['host']     = $db_host;
             $default['port']     = $db_port;
             $default['username'] = $db_user;
@@ -273,6 +310,8 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
+            $default = royalcms('config')->get('database.connections.default');
+
             $default['host']     = $db_host;
             $default['port']     = $db_port;
             $default['username'] = $db_user;
@@ -311,6 +350,8 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
+            $default = royalcms('config')->get('database.connections.default');
+
             $default['host']     = $db_host;
             $default['port']     = $db_port;
             $default['username'] = $db_user;
@@ -349,6 +390,8 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
+            $default = royalcms('config')->get('database.connections.default');
+
             $default['host']     = $db_host;
             $default['port']     = $db_port;
             $default['username'] = $db_user;
@@ -358,19 +401,19 @@ class InstallController extends BaseControllerAbstract
 
             royalcms('config')->set('database.connections.default', $default);
 
-            $admin_name      = isset($_POST['admin_name']) ? trim($_POST['admin_name']) : '';
-            $admin_password  = isset($_POST['admin_password']) ? trim($_POST['admin_password']) : '';
-            $admin_password2 = isset($_POST['admin_password2']) ? trim($_POST['admin_password2']) : '';
-            $admin_email     = isset($_POST['admin_email']) ? trim($_POST['admin_email']) : '';
+            $admin_name             = trim($this->request->input('admin_name'));
+            $admin_password         = trim($this->request->input('admin_password'));
+            $admin_password_confirm = trim($this->request->input('admin_password_confirm'));
+            $admin_email            = trim($this->request->input('admin_email'));
 
-            RC_Cache::app_cache_set('admin_name', $admin_name, 'install');
-            RC_Cache::app_cache_set('admin_password', $admin_password, 'install');
+//            RC_Cache::app_cache_set('admin_name', $admin_name, 'install');
+//            RC_Cache::app_cache_set('admin_password', $admin_password, 'install');
 
-            if (!$admin_name) {
+            if (empty($admin_name)) {
                 return $this->showmessage(__('管理员名称不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            if (!$admin_password) {
+            if (empty($admin_password)) {
                 return $this->showmessage(__('密码不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
@@ -378,15 +421,15 @@ class InstallController extends BaseControllerAbstract
                 return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            if (!(strlen($admin_password2) >= 8 && preg_match("/\d+/", $admin_password2) && preg_match("/[a-zA-Z]+/", $admin_password2))) {
+            if (!(strlen($admin_password_confirm) >= 8 && preg_match("/\d+/", $admin_password_confirm) && preg_match("/[a-zA-Z]+/", $admin_password_confirm))) {
                 return $this->showmessage(__('密码必须同时包含字母及数字', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            if ($admin_password != $admin_password2) {
+            if ($admin_password != $admin_password_confirm) {
                 return $this->showmessage(__('密码不相同', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-            $result = Helper::createAdminPassport($admin_name, $admin_password, $admin_email);
+            $result = (new CreateAdminPassportTask)($admin_name, $admin_password, $admin_email);
 
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
