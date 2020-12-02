@@ -187,69 +187,69 @@ class Helper
 //
 //    }
     
-    public static function createInstallConnection() 
-    {
-        $db_host = env('DB_HOST');
-        $db_user = env('DB_USERNAME');
-        $db_pass = env('DB_PASSWORD');
-        $db_name = env('DB_DATABASE');
-        $db_port = env('DB_PORT', 3306);
-        $prefix = env('DB_PREFIX');
+//    public static function createInstallConnection()
+//    {
+//        $db_host = env('DB_HOST');
+//        $db_user = env('DB_USERNAME');
+//        $db_pass = env('DB_PASSWORD');
+//        $db_name = env('DB_DATABASE');
+//        $db_port = env('DB_PORT', 3306);
+//        $prefix = env('DB_PREFIX');
+//
+//        $conn = self::createDatabaseConnection($db_host, $db_port, $db_user, $db_pass, $db_name);
+//        if (is_ecjia_error($conn)) {
+//            return $conn;
+//        }
+//
+//        $conn->setTablePrefix($prefix);
+//
+//        return $conn;
+//    }
 
-        $conn = self::createDatabaseConnection($db_host, $db_port, $db_user, $db_pass, $db_name);
-        if (is_ecjia_error($conn)) {
-            return $conn;
-        }
-        
-        $conn->setTablePrefix($prefix);
-
-        return $conn;
-    }
-
-    /**
-     * 创建管理员帐号
-     *
-     * @access  public
-     * @param   string      $admin_name
-     * @param   string      $admin_password
-     * @param   string      $admin_password2
-     * @param   string      $admin_email
-     * @return  boolean | ecjia_error    成功返回true，失败返回false
-     */
-    public static function createAdminPassport($admin_name, $admin_password, $admin_email) 
-    {
-        $admin_user = array(
-            0 => __('商品列表|index.php?m=goods&c=admin&a=init', 'installer'),
-            1 => __('订单列表|index.php?m=orders&c=admin&a=init', 'installer'),
-            2 => __('会员列表|index.php?m=user&c=admin&a=init', 'installer'),
-            3 => __('自营店铺|index.php?m=store&c=admin&a=init', 'installer'),
-        );
-        $nav_list = join(',', $admin_user);
-
-        try {
-            $conn = self::createInstallConnection();
-            if (is_ecjia_error($conn))
-            {
-                return $conn;
-            }
-            
-            $data = array(
-            	'user_name'     => $admin_name,
-                'email'         => $admin_email,
-                'password'      => md5($admin_password),
-                'add_time'      => RC_Time::gmtime(),
-                'action_list'   => 'all',
-                'nav_list'      => $nav_list
-            );
-            
-            //清空数据表
-            RC_DB::table('admin_user')->truncate();
-            return RC_DB::table('admin_user')->insert($data);
-            
-        } catch (QueryException $e) {
-            return new ecjia_error('create_passport_failed', __('创建管理员帐号失败', 'installer').'【'.$e->getMessage().'】');
-        }
-    }
+//    /**
+//     * 创建管理员帐号
+//     *
+//     * @access  public
+//     * @param   string      $admin_name
+//     * @param   string      $admin_password
+//     * @param   string      $admin_password2
+//     * @param   string      $admin_email
+//     * @return  boolean | ecjia_error    成功返回true，失败返回false
+//     */
+//    public static function createAdminPassport($admin_name, $admin_password, $admin_email)
+//    {
+//        $admin_user = array(
+//            0 => __('商品列表|index.php?m=goods&c=admin&a=init', 'installer'),
+//            1 => __('订单列表|index.php?m=orders&c=admin&a=init', 'installer'),
+//            2 => __('会员列表|index.php?m=user&c=admin&a=init', 'installer'),
+//            3 => __('自营店铺|index.php?m=store&c=admin&a=init', 'installer'),
+//        );
+//        $nav_list = join(',', $admin_user);
+//
+//        try {
+//            $conn = self::createInstallConnection();
+//            if (is_ecjia_error($conn))
+//            {
+//                return $conn;
+//            }
+//
+//            $data = array(
+//            	'user_name'     => $admin_name,
+//                'email'         => $admin_email,
+//                'password'      => md5($admin_password),
+//                'add_time'      => RC_Time::gmtime(),
+//                'action_list'   => 'all',
+//                'nav_list'      => $nav_list
+//            );
+//
+//            //清空数据表
+//            RC_DB::table('admin_user')->truncate();
+//            return RC_DB::table('admin_user')->insert($data);
+//
+//        } catch (QueryException $e) {
+//            return new ecjia_error('create_passport_failed', __('创建管理员帐号失败', 'installer').'【'.$e->getMessage().'】');
+//        }
+//    }
     
     /**
      * 获取一个新的auth_key
