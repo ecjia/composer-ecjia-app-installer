@@ -2,71 +2,71 @@
 ;
 (function(app, $) {
 	app.install = {
-		//初始化配置必填项验证
-		start: function() {
-
-
-			//验证数据库密码是否正确
-			var params = "db_host=" + dbhost + "&"
-				+ "db_port=" + dbport + "&"
-				+ "db_user=" + dbuser + "&"
-				+ "db_pass=" + dbpassword + "&"
-				+ "dbdatabase=" + dbdatabase;
-			var url = $('.check_db_correct').attr('data-url');
-
-			var status = true;
-			$.ajax({
-				type: 'post',
-				url: url,
-				data: params,
-				async: false,
-				success: function(result) {
-					if (result.state != 'success') {
-						smoke.alert(result.message, {ok: js_lang.ok,});
-						status = false;
-						return false;
-					}
-				},
-			});
-			if (status == false) {
-				return false;
-			}
-
-			//验证是否确认覆盖数据库
-			if (is_create == 1) {
-				var check_result;
-				var url = $('.check_db_exists').attr('data-url');
-				$.ajax({
-					type: 'post',
-					url: url,
-					data: params,
-					async: false,
-					success: function(result) {
-						check_result = result;
-					},
-				});
-				if (check_result.is_exist == true) {
-					smoke.confirm(js_lang.database_name_already_exists, function(e) {
-						if (e) {
-							status = true;
-							$('input[name="is_create"]').val(0); //覆盖数据库
-							start_install();
-						} else {
-							status = false;
-							$('#dbdatabase').val(dbdatabase).focus();
-							return false;
-						}
-					}, {
-						ok: js_lang.ok,
-						cancel: js_lang.cancel
-					});
-				} else {
-					start_install();
-				}
-			} else {
-				start_install();
-			}
-		},
+		// //初始化配置必填项验证
+		// start: function() {
+        //
+        //
+		// 	//验证数据库密码是否正确
+		// 	var params = "db_host=" + dbhost + "&"
+		// 		+ "db_port=" + dbport + "&"
+		// 		+ "db_user=" + dbuser + "&"
+		// 		+ "db_pass=" + dbpassword + "&"
+		// 		+ "dbdatabase=" + dbdatabase;
+		// 	var url = $('.check_db_correct').attr('data-url');
+        //
+		// 	var status = true;
+		// 	$.ajax({
+		// 		type: 'post',
+		// 		url: url,
+		// 		data: params,
+		// 		async: false,
+		// 		success: function(result) {
+		// 			if (result.state != 'success') {
+		// 				smoke.alert(result.message, {ok: js_lang.ok,});
+		// 				status = false;
+		// 				return false;
+		// 			}
+		// 		},
+		// 	});
+		// 	if (status == false) {
+		// 		return false;
+		// 	}
+        //
+		// 	//验证是否确认覆盖数据库
+		// 	if (is_create == 1) {
+		// 		var check_result;
+		// 		var url = $('.check_db_exists').attr('data-url');
+		// 		$.ajax({
+		// 			type: 'post',
+		// 			url: url,
+		// 			data: params,
+		// 			async: false,
+		// 			success: function(result) {
+		// 				check_result = result;
+		// 			},
+		// 		});
+		// 		if (check_result.is_exist == true) {
+		// 			smoke.confirm(js_lang.database_name_already_exists, function(e) {
+		// 				if (e) {
+		// 					status = true;
+		// 					$('input[name="is_create"]').val(0); //覆盖数据库
+		// 					start_install();
+		// 				} else {
+		// 					status = false;
+		// 					$('#dbdatabase').val(dbdatabase).focus();
+		// 					return false;
+		// 				}
+		// 			}, {
+		// 				ok: js_lang.ok,
+		// 				cancel: js_lang.cancel
+		// 			});
+		// 		} else {
+		// 			start_install();
+		// 		}
+		// 	} else {
+		// 		start_install();
+		// 	}
+		// },
 
 		return_setting: function() {
 			$('body').css('height', 'auto');
@@ -107,32 +107,32 @@
             }, 3000);
         },
 
-        //开始安装
-        start_install: function() {
-            $('.ui_showmessage').find('.close').parent().remove();
-            $('.control-group').removeClass("error f_error");
-            $('body').scrollTop(0).css('height', '100%');
-            $('#js-ecjia_deploy').css('display', 'none');
-            $('.path').children('li').removeClass('current').eq(3).addClass('current');
+        // //开始安装
+        // start_install: function() {
+        //     $('.ui_showmessage').find('.close').parent().remove();
+        //     $('.control-group').removeClass("error f_error");
+        //     $('body').scrollTop(0).css('height', '100%');
+        //     $('#js-ecjia_deploy').css('display', 'none');
+        //     $('.path').children('li').removeClass('current').eq(3).addClass('current');
+        //
+        //     app.install.progress(0);
+        //     app.install.install();
+        //     $.cookie('install_step4', 1);
+        //     return false;
+        // },
 
-            app.install.progress(0);
-            app.install.install();
-            $.cookie('install_step4', 1);
-            return false;
-        },
-
-        //进度条控制
-        progress: function(val) {
-            let html;
-            if (val === 100) {
-                html = js_lang.installation_complete
-            } else {
-                html = val + '%';
-            }
-            let progress_bar_el = $('.progress-bar');
-            progress_bar_el.css('width', val + '%');
-            progress_bar_el.html(html);
-        },
+        // //进度条控制
+        // progress: function(val) {
+        //     let html;
+        //     if (val === 100) {
+        //         html = js_lang.installation_complete
+        //     } else {
+        //         html = val + '%';
+        //     }
+        //     let progress_bar_el = $('.progress-bar');
+        //     progress_bar_el.css('width', val + '%');
+        //     progress_bar_el.html(html);
+        // },
 
         //安装程序
         // install: function() {
@@ -268,8 +268,98 @@
 
     //安装任务
 	app.task = {
+        //验证数据库密码是否正确
+        checkDatabasePasswordCorrectTask: function (next) {
+            console.log('checkDatabasePasswordCorrectTask');
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val()
+            };
+
+            let url = $('.check_db_correct').attr('data-url');
+            $.ajax({
+                type: 'post',
+                url: url,
+                data: params,
+                async: false,
+                success: function(result) {
+                    if (result.state !== 'success') {
+                        smoke.alert(result.message, {ok: js_lang.ok,});
+                        return false;
+                    }
+                    else {
+                        next();
+                    }
+                }
+            });
+
+        },
+
+        //验证是否确认覆盖数据库
+        checkDatabaseExistsTask: function (next) {
+            console.log('checkDatabaseExistsTask');
+
+            let is_create = $('input[name="is_create"]').val();
+
+            //验证是否确认覆盖数据库
+            if (parseInt(is_create) === 1) {
+
+                let params = {
+                    db_host: $("#db_host").val(),
+                    db_port: $("#db_port").val(),
+                    db_user: $("#db_user").val(),
+                    db_pass: $("#db_password").val(),
+                    db_database: $('#db_database').val(),
+                    db_prefix: $('#db_prefix').val(),
+                    timezone: $('#timezone').val()
+                };
+
+                // var check_result;
+                let url = $('.check_db_exists').attr('data-url');
+                $.ajax({
+                    type: 'post',
+                    url: url,
+                    data: params,
+                    async: false,
+                    success: function(result) {
+                        // check_result = result;
+
+                        if (result.db_is_exist === 1) {
+                            smoke.confirm(js_lang.database_name_already_exists, function(event) {
+                                if (event) {
+                                    // status = true;
+                                    $('input[name="is_create"]').val(0); //覆盖数据库
+                                    // start_install();
+                                    next();
+                                } else {
+                                    // status = false;
+                                    $('#db_database').val(params.db_database).focus();
+                                    return false;
+                                }
+                            }, {
+                                ok: js_lang.ok,
+                                cancel: js_lang.cancel
+                            });
+                        } else {
+                            next();
+                        }
+                    },
+                });
+            } else {
+                next();
+            }
+        },
+
         //安装程序启动
 	    installStartTask: function (next) {
+            console.log('installStartTask');
+
             $('.ui_showmessage').find('.close').parent().remove();
             $('.control-group').removeClass("error f_error");
             $('body').scrollTop(0).css('height', '100%');
@@ -586,31 +676,6 @@
 	// var lf = "<br />";
 	// var notice = null;
 	// var notice_html = '';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 })(ecjia.front, jQuery);
