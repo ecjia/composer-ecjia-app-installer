@@ -363,6 +363,39 @@
             }
         },
 
+        checkAdminPasswordTask: function (next) {
+            console.log('checkAdminPasswordTask');
+
+            let params = {
+                db_host: $("#db_host").val(),
+                db_port: $("#db_port").val(),
+                db_user: $("#db_user").val(),
+                db_pass: $("#db_password").val(),
+                db_database: $('#db_database').val(),
+                db_prefix: $('#db_prefix').val(),
+                timezone: $('#timezone').val(),
+                admin_name: $("#user_name").val(),
+                admin_password: $("#user_password").val(),
+                admin_password_confirm: $("#user_confirm_password").val(),
+                admin_email: $("#user_mail").val()
+            };
+
+            let url = $('input[name="check_admin_password_action"]').val();
+            $.post(url, params, function(result) {
+                if (result.state === 'error') {
+                    smoke.confirm(result.message, function(event) {
+                        $('#db_database').val(params.admin_password).focus();
+                        return false;
+                    }, {
+                        ok: js_lang.ok
+                    });
+                } else {
+                    next();
+                }
+            });
+
+        },
+
         //安装程序启动
 	    installStartTask: function (next) {
             console.log('installStartTask');
