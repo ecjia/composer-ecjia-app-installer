@@ -54,22 +54,23 @@ class InstallPercent
 
     /**
      * 设置步骤值
-     * @param $step
+     * @param $part
+     * @param int $step
+     * @return InstallPercent
      */
-    public function setStepValue($step)
+    public function setStepValue($part, $step = 20)
     {
-        if (isset($this->parts[$step])) {
-            if ($step == 'install_structure') {
+        if (isset($this->parts[$part])) {
+            if ($part == self::INSTALL_STRUCTURE_PART) {
                 $over = (new InstallMigrationFile())->getWillMigrationFilesCount();
                 if (!is_ecjia_error($over)) {
-                    if ($over >= 20) {
-                        $this->setValue(20);
-                    } else {
-                        $this->setValue($over);
+                    if ($over < $step) {
+                        $step = $over;
                     }
+                    $this->setValue($step);
                 }
             } else {
-                $this->setValue($this->parts[$step]);
+                $this->setValue($this->parts[$part]);
             }
         }
 

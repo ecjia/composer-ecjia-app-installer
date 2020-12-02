@@ -230,7 +230,7 @@
 
         updateNumTips: function (num) {
             let text = sprintf(js_lang.remainder, num);
-            $('#numtips').text(text);
+            $('#numtips').html(text);
         },
 
         removeNumTips: function () {
