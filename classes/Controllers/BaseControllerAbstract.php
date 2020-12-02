@@ -5,6 +5,7 @@ namespace Ecjia\App\Installer\Controllers;
 
 
 use Ecjia\App\Installer\BrowserEvent\PageScriptPrint;
+use Ecjia\App\Installer\Subscribers\FrontHookSubscriber;
 use Ecjia\System\BaseController\SimpleController;
 use RC_App;
 use RC_Hook;
@@ -35,6 +36,13 @@ abstract class BaseControllerAbstract extends SimpleController
 
     }
 
+    protected function load_hooks()
+    {
+        parent::load_hooks();
+
+        //单独加载安装器的hooker
+        royalcms('Royalcms\Component\Hook\Dispatcher')->subscribe(FrontHookSubscriber::class);
+    }
 
     /**
      * 直接跳转，返回Response对象
