@@ -36,6 +36,18 @@ abstract class BaseControllerAbstract extends SimpleController
     }
 
 
+    /**
+     * 直接跳转，返回Response对象
+     *
+     * @param string $url
+     * @param int $code
+     */
+    public function redirect($url, $code = 302)
+    {
+        return redirect($url, $code);
+    }
+
+
     protected function load_default_script_style()
     {
         //自定义加载

@@ -138,10 +138,7 @@ class InstallController extends BaseControllerAbstract
      */
     public function create_config_file()
     {
-//        $this->check_installed();
-
         try {
-
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -190,8 +187,6 @@ class InstallController extends BaseControllerAbstract
     public function create_database()
     {
         try {
-//        $this->check_installed();
-
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -205,7 +200,6 @@ class InstallController extends BaseControllerAbstract
             }
 
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::CREATE_DATABASE_PART)->getPercent();
-//            $percent = $this->get_percent('create_database');
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -224,11 +218,6 @@ class InstallController extends BaseControllerAbstract
     public function install_structure()
     {
         try {
-//        $this->check_installed();
-
-//            $config  = config('database');
-
-
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -271,9 +260,7 @@ class InstallController extends BaseControllerAbstract
                 $more = $over;
             }
 
-//        $percent = $this->get_percent('install_structure');
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::INSTALL_STRUCTURE_PART)->getPercent();
-
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent, 'more' => $more));
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -292,8 +279,6 @@ class InstallController extends BaseControllerAbstract
     public function install_base_data()
     {
         try {
-//        $this->check_installed();
-
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -319,7 +304,6 @@ class InstallController extends BaseControllerAbstract
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-//        $percent = $this->get_percent('install_base_data');
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::INSTALL_BASE_DATA_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
@@ -339,7 +323,6 @@ class InstallController extends BaseControllerAbstract
     public function install_demo_data()
     {
         try {
-//        $this->check_installed();
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -365,7 +348,6 @@ class InstallController extends BaseControllerAbstract
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-//        $percent = $this->get_percent('install_demo_data');
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::INSTALL_DEMO_DATA_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
@@ -385,7 +367,6 @@ class InstallController extends BaseControllerAbstract
     public function create_admin_passport()
     {
         try {
-//        $this->check_installed();
             $db_host     = trim($this->request->input('db_host'));
             $db_port     = trim($this->request->input('db_port'));
             $db_user     = trim($this->request->input('db_user'));
@@ -409,9 +390,6 @@ class InstallController extends BaseControllerAbstract
             $admin_password         = trim($this->request->input('admin_password'));
             $admin_password_confirm = trim($this->request->input('admin_password_confirm'));
             $admin_email            = trim($this->request->input('admin_email'));
-
-//            RC_Cache::app_cache_set('admin_name', $admin_name, 'install');
-//            RC_Cache::app_cache_set('admin_password', $admin_password, 'install');
 
             if (empty($admin_name)) {
                 return $this->showmessage(__('管理员名称不能为空', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -442,7 +420,6 @@ class InstallController extends BaseControllerAbstract
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
 
-//            $percent = $this->get_percent('create_admin_passport');
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::CREATE_ADMIN_PASSPORT_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
@@ -456,34 +433,6 @@ class InstallController extends BaseControllerAbstract
         }
     }
 
-
-//    private function get_percent($step)
-//    {
-//
-//        $sqlcount = count(scandir(royalcms('path') . '/content/database/migrations')) - 2;
-//
-//        if ($step == 'create_config_file') {
-//            $past = 20;
-//        } else if ($step == 'create_database') {
-//            $past = 40;
-//        } else if ($step == 'install_structure') {
-//            $over = Helper::getWillMigrationFilesCount();
-//            if (!is_ecjia_error($over))
-//                $past = 40 + $sqlcount - $over;
-//        } else if ($step == 'install_base_data') {
-//            $past = 40 + $sqlcount + 20;
-//        } else if ($step == 'install_demo_data') {
-//            $past = 40 + $sqlcount + 40;
-//        } else if ($step == 'create_admin_passport') {
-//            //             $past = 4 +  $_SESSION['temp']['sqlcount'] + 6;
-//            return 100;
-//        }
-//        $total = $sqlcount + 20 + 20 + 20 + 20;
-//
-//
-//        return $percent = floor($past / $total * 100);
-//
-//    }
 }
 
 //end

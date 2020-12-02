@@ -20,7 +20,7 @@
 	                {/if}
 
                     <div class="p message notice">
-                        {t domain="installer"  escape=no}<a target="_blank" href="https://ecjia.com/wiki/%E5%B8%AE%E5%8A%A9:ECJia%E5%88%B0%E5%AE%B6">前往ECJIA WIKI，查看帮助文档，使您快速上手。</a>{/t}
+                        {t domain="installer"  escape=no}<a target="_blank" href="https://www.ecjia.com/wiki/">前往ECJIA WIKI，查看帮助文档，使您快速上手。</a>{/t}
                     </div>
 
                     {if !empty($go_urls)}
