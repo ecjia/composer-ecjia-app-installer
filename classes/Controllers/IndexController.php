@@ -47,6 +47,7 @@
 
 namespace Ecjia\App\Installer\Controllers;
 
+use Ecjia\App\Installer\AdminPasswordStorage;
 use Ecjia\App\Installer\BrowserEvent\AgreeChangeEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
 use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseAccountEvent;
@@ -281,7 +282,9 @@ class IndexController extends BaseControllerAbstract
 
 
         if (!$result) {
-            $this->check_installed();
+//            dd(1);
+//            $this->check_installed();
+
 //            //安装完成后的一些善后处理
 //            Helper::updateInstallDate();
 //            Helper::updateEcjiaVersion();
@@ -292,23 +295,41 @@ class IndexController extends BaseControllerAbstract
 
             RC_Hook::do_action('ecjia_installer_finished_after');
 
-            $admin_name     = RC_Cache::app_cache_get('admin_name', 'install');
-            $admin_password = RC_Cache::app_cache_get('admin_password', 'install');
+//            $admin_name     = RC_Cache::app_cache_get('admin_name', 'install');
+//            $admin_password = RC_Cache::app_cache_get('admin_password', 'install');
 
-            $index_url    = RC_Uri::home_url();
-            $h5_url       = RC_Uri::home_url() . '/sites/m/';
-            $admin_url    = RC_Uri::home_url() . '/sites/admincp/';
-            $merchant_url = RC_Uri::home_url() . '/sites/merchant/';
+            list($admin_name, $admin_password) = AdminPasswordStorage::get();
 
-            $this->assign('index_url', $index_url);
-            $this->assign('h5_url', $h5_url);
-            $this->assign('admin_url', $admin_url);
-            $this->assign('merchant_url', $merchant_url);
+//            $index_url    = RC_Uri::home_url();
+//            $h5_url       = RC_Uri::home_url() . '/sites/m/';
+//            $admin_url    = RC_Uri::home_url() . '/sites/admincp/';
+//            $merchant_url = RC_Uri::home_url() . '/sites/merchant/';
+
+//            $this->assign('index_url', $index_url);
+//            $this->assign('h5_url', $h5_url);
+//            $this->assign('admin_url', $admin_url);
+//            $this->assign('merchant_url', $merchant_url);
             $this->assign('admin_name', $admin_name);
             $this->assign('admin_password', $admin_password);
 
-            $finish_message = __('恭喜您，安装成功!', 'installer');
-            $this->assign('finish_message', $finish_message);
+            $go_urls = [
+                'index_url' => [
+                    'text' => __('点击这里进入ECJIA首页', 'installer'),
+                    'link' => RC_Uri::home_url(),
+                ],
+                'admin_url' => [
+                    'text' => __('点击这里进入ECJIA平台后台', 'installer'),
+                    'link' => RC_Uri::home_url() . '/sites/admincp/',
+                ],
+                'merchant_url' => [
+                    'text' => __('点击这里进入ECJIA商家后台', 'installer'),
+                    'link' => RC_Uri::home_url() . '/sites/merchant/',
+                ],
+            ];
+
+            $this->assign('go_urls', $go_urls);
+
+            $this->assign('finish_message', __('恭喜您，安装成功!', 'installer'));
 
             $this->assign('ecjia_step', 5);
 
@@ -337,19 +358,27 @@ class IndexController extends BaseControllerAbstract
         $this->unset_cookie();
 
         $finish_message = __('安装程序已经被锁定。', 'installer');
-        $locked_message = sprintf(__('如果您确定要重新安装ECJia到家，请删除%s目录下的%s。', 'installer'), 'content/storages/data', 'install.lock');
+        $locked_message = sprintf(__('如果您确定要重新安装ECJia，请删除%s目录下的%s。', 'installer'), 'content/storages/data', 'install.lock');
+
         $this->assign('finish_message', $finish_message);
         $this->assign('locked_message', $locked_message);
 
-        $index_url    = RC_Uri::home_url();
-        $h5_url       = RC_Uri::home_url() . '/sites/m/';
-        $admin_url    = RC_Uri::home_url() . '/sites/admincp/';
-        $merchant_url = RC_Uri::home_url() . '/sites/merchant/';
+        $go_urls = [
+            'index_url' => [
+                'text' => __('点击这里进入ECJIA首页', 'installer'),
+                'link' => RC_Uri::home_url(),
+            ],
+            'admin_url' => [
+                'text' => __('点击这里进入ECJIA平台后台', 'installer'),
+                'link' => RC_Uri::home_url() . '/sites/admincp/',
+            ],
+            'merchant_url' => [
+                'text' => __('点击这里进入ECJIA到家商家后台', 'installer'),
+                'link' => RC_Uri::home_url() . '/sites/merchant/',
+            ],
+        ];
 
-        $this->assign('index_url', $index_url);
-        $this->assign('h5_url', $h5_url);
-        $this->assign('admin_url', $admin_url);
-        $this->assign('merchant_url', $merchant_url);
+        $this->assign('go_urls', $go_urls);
 
         if (!Helper::checkInstallLock()) {
             return $this->redirect(RC_Uri::url('installer/index/init'));

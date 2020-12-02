@@ -47,46 +47,14 @@
 
 namespace Ecjia\App\Installer\Controllers;
 
-use CreateAdminPassportTask;
-use Ecjia\App\Installer\BrowserEvent\AgreeChangeEvent;
-use Ecjia\App\Installer\BrowserEvent\InstallCheckAgreeSubmitEvent;
-use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseAccountEvent;
-use Ecjia\App\Installer\BrowserEvent\InstallCheckDatabaseExistsEvent;
-use Ecjia\App\Installer\BrowserEvent\InstallCheckUserPasswordEvent;
-use Ecjia\App\Installer\BrowserEvent\InstallStartEvent;
-use Ecjia\App\Installer\BrowserEvent\PageEventManager;
-use Ecjia\App\Installer\Exceptions\InstallLockedException;
-use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\DNSCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\DomainCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionCurlCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionFileinfoCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionGDCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionMysqliCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionOpensslCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionPdoMysqlCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionSocketCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionZlibCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\PHPOSCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\PHPVersionCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\SafeModeCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\TimezoneCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\UploadMaxFilesizeCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\WebPathCheck;
-use Ecjia\App\Installer\InstallChecker\Checkers\WebServerCheck;
-use Ecjia\App\Installer\InstallChecker\InstallChecker;
-use Ecjia\App\Installer\InstallChecker\InstallCheckStatus;
+use Ecjia\App\Installer\AdminPasswordStorage;
 use Ecjia\App\Installer\InstallCookie;
 use Ecjia\App\Installer\InstallDatabase;
 use Ecjia\App\Installer\InstallEnvConfig;
 use Ecjia\App\Installer\InstallMigrationFile;
 use Ecjia\App\Installer\InstallPercent;
 use Ecjia\App\Installer\InstallSeederFile;
-use Ecjia\App\Installer\Timezone;
-use RC_App;
-use RC_Hook;
-use RC_Uri;
-use RC_Cache;
+use Ecjia\App\Installer\InstallTask\CreateAdminPassportTask;
 use Ecjia\App\Installer\Helper;
 use ecjia;
 
@@ -464,6 +432,9 @@ class InstallController extends BaseControllerAbstract
             if ($admin_password != $admin_password_confirm) {
                 return $this->showmessage(__('密码不相同', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
             }
+
+            //存储临时密码
+            AdminPasswordStorage::save($admin_name, $admin_password);
 
             $result = (new CreateAdminPassportTask)($admin_name, $admin_password, $admin_email);
 
