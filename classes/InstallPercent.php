@@ -42,6 +42,16 @@ class InstallPercent
     }
 
     /**
+     * 重置安装进度
+     */
+    public function reset()
+    {
+        $this->offset = 0;
+        $this->cookie->setInstallOffset($this->offset);
+        return $this;
+    }
+
+    /**
      * 设置进度值
      * @param $value
      */

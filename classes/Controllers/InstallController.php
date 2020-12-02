@@ -80,6 +80,7 @@ use Ecjia\App\Installer\InstallDatabase;
 use Ecjia\App\Installer\InstallEnvConfig;
 use Ecjia\App\Installer\InstallMigrationFile;
 use Ecjia\App\Installer\InstallPercent;
+use Ecjia\App\Installer\InstallSeederFile;
 use Ecjia\App\Installer\Timezone;
 use RC_App;
 use RC_Hook;
@@ -101,6 +102,20 @@ class InstallController extends BaseControllerAbstract
         set_time_limit(0);
 
         $this->cookie = new InstallCookie();
+    }
+
+    /**
+     * 安装数据重置
+     * @return \Royalcms\Component\Http\Response|string
+     */
+    public function install_start()
+    {
+        try {
+            (new InstallPercent($this->cookie))->reset();
+            return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => 0));
+        } catch (\Exception $exception) {
+            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        }
     }
 
     /**
@@ -143,7 +158,6 @@ class InstallController extends BaseControllerAbstract
 
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::CREATE_CONFIG_FILE_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
-
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
@@ -268,7 +282,7 @@ class InstallController extends BaseControllerAbstract
 
             royalcms('config')->set('database.connections.default', $default);
 
-            $result = Helper::installBaseData();
+            $result = InstallSeederFile::installBaseData();
 
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -306,7 +320,7 @@ class InstallController extends BaseControllerAbstract
 
             royalcms('config')->set('database.connections.default', $default);
 
-            $result = Helper::installDemoData();
+            $result = InstallSeederFile::installDemoData();
 
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);

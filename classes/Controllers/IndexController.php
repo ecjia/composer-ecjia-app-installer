@@ -133,8 +133,7 @@ class IndexController extends BaseControllerAbstract
             $this->stepInstallStatus(InstallCheckStatus::STEP1);
             $back_url = RC_Uri::url('installer/index/detect');
             return $this->showmessage(__('检测通过', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('url' => $back_url));
-        }
-        else {
+        } else {
             return $this->showmessage(__('请先同意协议', 'installer'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
     }
@@ -234,19 +233,20 @@ class IndexController extends BaseControllerAbstract
             ->addPageHandler(InstallStartEvent::class);
         $this->loadPageScript($page);
 
-        $show_timezone  = 'yes';
-        $timezones      = Timezone::getTimezones();
+        $show_timezone = 'yes';
+        $timezones     = Timezone::getTimezones();
 
-        $install_actions = [
-            'create_config_file_action' => RC_Uri::url('installer/install/create_config_file'),
-            'create_database_action' => RC_Uri::url('installer/install/create_database'),
-            'install_structure_action' => RC_Uri::url('installer/install/install_structure'),
-            'install_base_data_action' => RC_Uri::url('installer/install/install_base_data'),
-            'install_demo_data_action' => RC_Uri::url('installer/install/install_demo_data'),
+        $install_actions      = [
+            'install_start_action'         => RC_Uri::url('installer/install/install_start'),
+            'create_config_file_action'    => RC_Uri::url('installer/install/create_config_file'),
+            'create_database_action'       => RC_Uri::url('installer/install/create_database'),
+            'install_structure_action'     => RC_Uri::url('installer/install/install_structure'),
+            'install_base_data_action'     => RC_Uri::url('installer/install/install_base_data'),
+            'install_demo_data_action'     => RC_Uri::url('installer/install/install_demo_data'),
             'create_admin_passport_action' => RC_Uri::url('installer/install/create_admin_passport'),
-            'do_others_action' => RC_Uri::url('installer/install/do_others'),
-            'install_index_action' => RC_Uri::url('installer/index/init'), //安装首页
-            'install_finish_action' => RC_Uri::url('installer/index/finish'), //安装完成页面
+            'do_others_action'             => RC_Uri::url('installer/install/do_others'),
+            'install_index_action'         => RC_Uri::url('installer/index/init'), //安装首页
+            'install_finish_action'        => RC_Uri::url('installer/index/finish'), //安装完成页面
         ];
         $install_actions_html = collect($install_actions)->map(function ($url, $key) {
             return "<input type=\"hidden\" name=\"{$key}\" value=\"{$url}\" />";
@@ -433,11 +433,11 @@ class IndexController extends BaseControllerAbstract
     {
         $this->check_installed();
 
-        $db_host  = trim($this->request->input('db_host'));
-        $db_port  = trim($this->request->input('db_port'));
-        $db_user  = trim($this->request->input('db_user'));
-        $db_pass  = trim($this->request->input('db_pass'));
-        $db_name  = trim($this->request->input('db_name'));
+        $db_host = trim($this->request->input('db_host'));
+        $db_port = trim($this->request->input('db_port'));
+        $db_user = trim($this->request->input('db_user'));
+        $db_pass = trim($this->request->input('db_pass'));
+        $db_name = trim($this->request->input('db_name'));
 
         $result = (new InstallDatabase($db_host, $db_port, $db_user, $db_pass))->createDatabase($db_name);
 
