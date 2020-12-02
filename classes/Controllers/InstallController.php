@@ -205,17 +205,6 @@ class InstallController extends BaseControllerAbstract
 
             royalcms('config')->set('database.connections.default', $default);
 
-//            config([
-//                '*::database.connections.default.host'     => $db_host,
-//                '*::database.connections.default.port'     => $db_port,
-//                '*::database.connections.default.username' => $db_user,
-//                '*::database.connections.default.password' => $db_pass,
-//                '*::database.connections.default.database' => $db_database,
-//                '*::database.connections.default.prefix'   => $db_prefix,
-//            ]);
-
-//            dd(config());
-//            dd(config('*::database.connections.default'));
             $limit = 20;
 
             $migrate = new InstallMigrationFile();
@@ -270,14 +259,14 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
-            config([
-                'database.connections.default.host'     => $db_host,
-                'database.connections.default.port'     => $db_port,
-                'database.connections.default.username' => $db_user,
-                'database.connections.default.password' => $db_pass,
-                'database.connections.default.database' => $db_database,
-                'database.connections.default.prefix'   => $db_prefix,
-            ]);
+            $default['host']     = $db_host;
+            $default['port']     = $db_port;
+            $default['username'] = $db_user;
+            $default['password'] = $db_pass;
+            $default['database'] = $db_database;
+            $default['prefix']   = $db_prefix;
+
+            royalcms('config')->set('database.connections.default', $default);
 
             $result = Helper::installBaseData();
 
@@ -308,14 +297,14 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
-            config([
-                'database.connections.default.host'     => $db_host,
-                'database.connections.default.port'     => $db_port,
-                'database.connections.default.username' => $db_user,
-                'database.connections.default.password' => $db_pass,
-                'database.connections.default.database' => $db_database,
-                'database.connections.default.prefix'   => $db_prefix,
-            ]);
+            $default['host']     = $db_host;
+            $default['port']     = $db_port;
+            $default['username'] = $db_user;
+            $default['password'] = $db_pass;
+            $default['database'] = $db_database;
+            $default['prefix']   = $db_prefix;
+
+            royalcms('config')->set('database.connections.default', $default);
 
             $result = Helper::installDemoData();
 
@@ -346,14 +335,14 @@ class InstallController extends BaseControllerAbstract
             $db_prefix   = trim($this->request->input('db_prefix'));
 
             //动态修改数据库连接配置
-            config([
-                'database.connections.default.host'     => $db_host,
-                'database.connections.default.port'     => $db_port,
-                'database.connections.default.username' => $db_user,
-                'database.connections.default.password' => $db_pass,
-                'database.connections.default.database' => $db_database,
-                'database.connections.default.prefix'   => $db_prefix,
-            ]);
+            $default['host']     = $db_host;
+            $default['port']     = $db_port;
+            $default['username'] = $db_user;
+            $default['password'] = $db_pass;
+            $default['database'] = $db_database;
+            $default['prefix']   = $db_prefix;
+
+            royalcms('config')->set('database.connections.default', $default);
 
             $admin_name      = isset($_POST['admin_name']) ? trim($_POST['admin_name']) : '';
             $admin_password  = isset($_POST['admin_password']) ? trim($_POST['admin_password']) : '';
