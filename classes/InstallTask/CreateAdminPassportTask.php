@@ -1,6 +1,10 @@
 <?php
 
+namespace Ecjia\App\Installer\InstallTask;
 
+use ecjia_error;
+use RC_DB;
+use RC_Time;
 use Royalcms\Component\Database\QueryException;
 
 class CreateAdminPassportTask
@@ -28,7 +32,7 @@ class CreateAdminPassportTask
             RC_DB::table('admin_user')->truncate();
             return RC_DB::table('admin_user')->insert($data);
         } catch (QueryException $e) {
-            return new ecjia_error('create_passport_failed', __('创建管理员帐号失败', 'installer').'【'.$e->getMessage().'】');
+            return new ecjia_error('create_passport_failed', sprintf(__('创建管理员帐号失败【%s】', 'installer'), $e->getMessage()));
         }
     }
 

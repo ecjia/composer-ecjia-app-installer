@@ -72,10 +72,6 @@ class Helper
     
     const DB_CHARSET = 'utf8mb4';
     
-
-    
-
-    
 //    /**
 //     * 获得数据库列表
 //     *
