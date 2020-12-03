@@ -54,7 +54,6 @@ class InstallEnvConfig
     {
         try {
             $contentArray = collect(file($this->envPath, FILE_IGNORE_NEW_LINES));
-
             $contentArray->transform(function ($item) use ($data){
                 foreach ($data as $key => $value) {
                     if (str_contains($item, $key)) {
@@ -73,7 +72,28 @@ class InstallEnvConfig
         catch (Exception $e) {
             return new ecjia_error('write_config_file_failed', __('写入配置文件出错', 'installer'));
         }
+    }
 
+    /**
+     * 修改.env文件
+     * @param array $data
+     * @return string | null | ecjia_error
+     */
+    public function modifyEnvVariable(array $data)
+    {
+        try {
+            $envset = new EnvironmentSet();
+            $content = $envset->readFile($this->envPath);
+//            dd($content);
+            foreach ($data as $key => $value) {
+                [$newEnvFileContent, $isNewVariableSet] = $envset->setEnvVariable($content, $key, $value);
+                $content = $newEnvFileContent;
+            }
+            dd($newEnvFileContent);
+            $envset->writeFile($this->envPath, $newEnvFileContent);
+        } catch (Exception $e) {
+            return new ecjia_error('write_config_file_failed', __('写入配置文件出错', 'installer'));
+        }
     }
 
 }

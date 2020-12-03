@@ -139,12 +139,12 @@ class InstallController extends BaseControllerAbstract
     public function create_config_file()
     {
         try {
-            $db_host     = trim($this->request->input('db_host'));
-            $db_port     = trim($this->request->input('db_port'));
-            $db_user     = trim($this->request->input('db_user'));
-            $db_pass     = trim($this->request->input('db_pass'));
-            $db_database = trim($this->request->input('db_database'));
-            $db_prefix   = trim($this->request->input('db_prefix'));
+            $db_host     = trim($this->request->input('db_host', ''));
+            $db_port     = trim($this->request->input('db_port', ''));
+            $db_user     = trim($this->request->input('db_user', ''));
+            $db_pass     = trim($this->request->input('db_pass', ''));
+            $db_database = trim($this->request->input('db_database', ''));
+            $db_prefix   = trim($this->request->input('db_prefix', ''));
             $timezone    = trim($this->request->input('timezone', 'Asia/Shanghai'));
 
             $auth_key = Helper::getAuthKey();
@@ -162,7 +162,7 @@ class InstallController extends BaseControllerAbstract
 
             $installEnv = new InstallEnvConfig();
             $installEnv->createEnv();
-            $result = $installEnv->modifyEnv($data);
+            $result = $installEnv->modifyEnvVariable($data);
 
             if (is_ecjia_error($result)) {
                 return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
