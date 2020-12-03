@@ -69,29 +69,6 @@ use ecjia_cloud;
 
 class Helper
 {
-    
-    const DB_CHARSET = 'utf8mb4';
-    
-//    /**
-//     * 获得数据库列表
-//     *
-//     * @access  public
-//     * @param   string      $host        主机
-//     * @param   string      $port        端口号
-//     * @param   string      $user        用户名
-//     * @param   string      $pass        密码
-//     * @return  mixed       成功返回数据库列表组成的数组，失败返回false
-//     */
-//    public static function getDataBases($host, $port, $user, $pass)
-//    {
-//        $conn = self::createDatabaseConnection($host, $port, $user, $pass);
-//        if (is_ecjia_error($conn)) {
-//        	return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。','installer'));
-//        }
-//        $r = $conn->select("SHOW DATABASES");
-//        return collect($r)->lists('Database');
-//    }
-
 
     /**
      * 检测目录权限
@@ -123,129 +100,7 @@ class Helper
 
         return $list;
     }
-    
-//    /**
-//     * 创建数据库连接
-//     *
-//     * @access  public
-//     * @param   string      $host        主机
-//     * @param   string      $port        端口号
-//     * @param   string      $user        用户名
-//     * @param   string      $pass        密码
-//     * @return  \Royalcms\Component\Database\Connection | ecjia_error      成功返回数据库连接对象，失败返回false
-//     */
-//    public static function createDatabaseConnection($host, $port, $user, $pass, $database = null)
-//    {
-//        try {
-//
-//            $dsn = "mysql:host=$host;port=$port";
-//            if ($database) {
-//                $dsn .= ";dbname=$database";
-//            }
-//            $db = new \PDO($dsn, $user, $pass);
-//            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//            $db->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-//
-//            $connection = new Connection($db);
-//            $connection->setFetchMode(config('database.fetch'));
-//            return $connection;
-//        } catch (PDOException $e) {
-//
-//            return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
-//        }
-//    }
-    
-//    /**
-//     * 创建指定名字的数据库
-//     *
-//     * @access  public
-//     * @param   string      $host        主机
-//     * @param   string      $port        端口号
-//     * @param   string      $user        用户名
-//     * @param   string      $pass        密码
-//     * @param   string      $database    数据库名
-//     * @return  boolean | ecjia_error    成功返回true，失败返回false
-//     */
-//    public static function createDatabase($host, $port, $user, $pass, $database)
-//    {
-//        try {
-//
-//            $conn = self::createDatabaseConnection($host, $port, $user, $pass);
-//            if (is_ecjia_error($conn)) {
-//            	return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
-//            }
-//            $result = $conn->unprepared("CREATE DATABASE `$database`");
-//            return true;
-//
-//        } catch (QueryException $e) {
-//            return new ecjia_error('cannt_create_database', __('连接数据库失败，无法创建数据库', 'installer'));
-//        }
-//
-//    }
-    
-//    public static function createInstallConnection()
-//    {
-//        $db_host = env('DB_HOST');
-//        $db_user = env('DB_USERNAME');
-//        $db_pass = env('DB_PASSWORD');
-//        $db_name = env('DB_DATABASE');
-//        $db_port = env('DB_PORT', 3306);
-//        $prefix = env('DB_PREFIX');
-//
-//        $conn = self::createDatabaseConnection($db_host, $db_port, $db_user, $db_pass, $db_name);
-//        if (is_ecjia_error($conn)) {
-//            return $conn;
-//        }
-//
-//        $conn->setTablePrefix($prefix);
-//
-//        return $conn;
-//    }
 
-//    /**
-//     * 创建管理员帐号
-//     *
-//     * @access  public
-//     * @param   string      $admin_name
-//     * @param   string      $admin_password
-//     * @param   string      $admin_password2
-//     * @param   string      $admin_email
-//     * @return  boolean | ecjia_error    成功返回true，失败返回false
-//     */
-//    public static function createAdminPassport($admin_name, $admin_password, $admin_email)
-//    {
-//        $admin_user = array(
-//            0 => __('商品列表|index.php?m=goods&c=admin&a=init', 'installer'),
-//            1 => __('订单列表|index.php?m=orders&c=admin&a=init', 'installer'),
-//            2 => __('会员列表|index.php?m=user&c=admin&a=init', 'installer'),
-//            3 => __('自营店铺|index.php?m=store&c=admin&a=init', 'installer'),
-//        );
-//        $nav_list = join(',', $admin_user);
-//
-//        try {
-//            $conn = self::createInstallConnection();
-//            if (is_ecjia_error($conn))
-//            {
-//                return $conn;
-//            }
-//
-//            $data = array(
-//            	'user_name'     => $admin_name,
-//                'email'         => $admin_email,
-//                'password'      => md5($admin_password),
-//                'add_time'      => RC_Time::gmtime(),
-//                'action_list'   => 'all',
-//                'nav_list'      => $nav_list
-//            );
-//
-//            //清空数据表
-//            RC_DB::table('admin_user')->truncate();
-//            return RC_DB::table('admin_user')->insert($data);
-//
-//        } catch (QueryException $e) {
-//            return new ecjia_error('create_passport_failed', __('创建管理员帐号失败', 'installer').'【'.$e->getMessage().'】');
-//        }
-//    }
     
     /**
      * 获取一个新的auth_key
@@ -301,116 +156,6 @@ class Helper
 //    }
     
     /**
-     * 安装数据
-     *
-     * @access  public
-     * @param   array         $sql_files        SQL文件路径组成的数组
-     * @return  boolean       成功返回true，失败返回false
-     */
-    public static function installData($sql_files) 
-    {
-        RC_Package::package('app::installer')->loadClass('sql_query', false);
-        
-        $prefix = env('DB_PREFIX');
-        
-        $conn = self::createInstallConnection();
-        if (is_ecjia_error($conn)) {
-        	return $conn;
-        }
-        $sql_query = new sql_query($conn, self::DB_CHARSET, 'ecjia_', $prefix);
-        
-        $result = $sql_query->runAll($sql_files);
-        if ($result === false) {
-            return $sql_query->getError();
-        }
-        return true;
-    }
-    
-//    /**
-//     * 安装数据库结构
-//     *
-//     * @return  boolean | ecjia_error   成功返回true，失败返回ecjia_error
-//     */
-//    public static function installStructure($limit = 20)
-//    {
-//        try {
-//            $migrate = new Migrate();
-//
-//            return $migrate->fire($limit);
-//        }
-//        catch (QueryException $e) {
-//
-//            return new ecjia_error($e->getCode(), $e->getMessage());
-//        }
-//    }
-
-//    /**
-//     * 获取将要安装的脚本数量
-//     */
-//    public static function getWillMigrationFilesCount()
-//    {
-//        try {
-//            $migrate = new Migrate();
-//
-//            return $migrate->getWillMigrationFilesCount();
-//        }
-//        catch (QueryException $e) {
-//
-//            return new ecjia_error($e->getCode(), $e->getMessage());
-//        }
-//    }
-
-    
-//    /**
-//     * 填充数据表基础数据
-//     *
-//     * @return  boolean | ecjia_error    成功返回true，失败返回ecjia_error
-//     */
-//    public static function installBaseData()
-//    {
-//        try {
-//            $seeder = new Seeder('InitDatabaseSeeder');
-//
-//            $seeder->fire();
-//
-//            return true;
-//        }
-//        catch (QueryException $e) {
-//
-//            return new ecjia_error($e->getCode(), $e->getMessage());
-//        }
-//        catch (RecoverableErrorException $e) {
-//
-//            return new ecjia_error('recoverable_error_exception', $e->getMessage());
-//        }
-//    }
-    
-//    /**
-//     * 填充数据表演示数据
-//     *
-//     * @return  boolean | ecjia_error   成功返回true，失败返回ecjia_error
-//     */
-//    public static function installDemoData()
-//    {
-//        try {
-//            $seeder = new Seeder('DemoDatabaseSeeder');
-//
-//            $seeder->fire();
-//
-//            return true;
-//        }
-//        catch (QueryException $e) {
-//
-//            return new ecjia_error($e->getCode(), $e->getMessage());
-//        }
-//        catch (RecoverableErrorException $e) {
-//
-//            return new ecjia_error('recoverable_error_exception', $e->getMessage());
-//        }
-//    }
-    
-    
-    /**
      * 更新 ECJIA 安装日期
      * @return array | ecjia_error
      */
@@ -457,7 +202,7 @@ class Helper
             'language' => RC_Config::get('system.locale'),
             'charset' => 'utf-8',
             'php_ver' => PHP_VERSION,
-            'mysql_ver' => self::getMysqlVersionByConnection(RC_DB::connection()),
+            'mysql_ver' => DatabaseConnection::getMysqlVersionByConnection(RC_DB::connection()),
             'ecjia_version' => VERSION,
             'ecjia_release' => RELEASE,
             'royalcms_version' => \Royalcms\Component\Foundation\Royalcms::VERSION,
@@ -517,50 +262,8 @@ class Helper
         $path = storage_path() . '/data/install.lock';
         return RC_File::exists($path);
     }
-    
-    /**
-     * 检测mysql数据引擎
-     */
-    public static function checkMysqlSupport($host, $port, $user, $pass)
-    {
-    	$conn = self::createDatabaseConnection($host, $port, $user, $pass);
-    	if (is_ecjia_error($conn)) {
-    		return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
-    	}
-    	$r = $conn->select("SHOW variables like 'have_%';");
-    	return collect($r);
-    }
-    
-//    /**
-//     * 获取mysql版本
-//     */
-//    public static function getMysqlVersion($host, $port, $user, $pass)
-//    {
-//    	$conn = self::createDatabaseConnection($host, $port, $user, $pass);
-//    	if (is_ecjia_error($conn)) {
-//    		return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
-//    	}
-//    	$r = $conn->select("select version() as version;");
-//    	$version = collect(collect($r)->lists('version'))->first();
-//    	$ver = strstr($version, '-', true);
-//    	if ( $ver ) {
-//    	    return $ver;
-//    	} else {
-//    	    return $version;
-//    	}
-//    }
-    
-    public static function getMysqlVersionByConnection(Connection $connection)
-    {
-        $r = $connection->select("select version() as version;");
-        $version = collect(collect($r)->lists('version'))->first();
-        $ver = strstr($version, '-', true);
-        if ( $ver ) {
-            return $ver;
-        } else {
-            return $version;
-        }
-    }
+
+
 }
 
 //end
