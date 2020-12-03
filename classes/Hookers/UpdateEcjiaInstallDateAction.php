@@ -20,17 +20,15 @@ class UpdateEcjiaInstallDateAction
 
     /**
      * Handle the event.
-     * @return ecjia_error
+     * @return ecjia_error|bool
      */
     public function handle()
     {
-
         try {
             return RC_DB::table('shop_config')->where('code', 'install_date')->update(array('value' => RC_Time::gmtime()));
         } catch (QueryException $e) {
             return new ecjia_error($e->getCode(), $e->getMessage());
         }
-
     }
 
 }

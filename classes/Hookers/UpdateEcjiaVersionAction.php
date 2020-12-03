@@ -20,13 +20,12 @@ class UpdateEcjiaVersionAction
 
     /**
      * Handle the event.
-     * @return ecjia_error
+     * @return ecjia_error|bool
      */
     public function handle()
     {
-
         try {
-            $version = RC_Config::get('release.version', '1.3.0');
+            $version = RC_Config::get('release.version', '3.0.0');
             RC_DB::table('shop_config')->where('code', 'mobile_app_version')->update(array('value' => $version));
             return RC_DB::table('shop_config')->where('code', 'ecjia_version')->update(array('value' => $version));
         } catch (QueryException $e) {

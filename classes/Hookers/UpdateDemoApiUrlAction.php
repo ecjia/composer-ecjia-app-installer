@@ -20,7 +20,7 @@ class UpdateDemoApiUrlAction
 
     /**
      * Handle the event.
-     * @return ecjia_error
+     * @return ecjia_error|bool
      */
     public function handle()
     {

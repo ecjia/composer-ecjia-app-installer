@@ -3,6 +3,7 @@
 
 namespace Ecjia\App\Installer\Hookers;
 
+use Ecjia\App\Installer\DatabaseConnection;
 use ecjia_cloud;
 use ecjia_error;
 use RC_Config;
@@ -22,7 +23,7 @@ class UpdateHashCodeAction
 
     /**
      * Handle the event.
-     * @return ecjia_error
+     * @return ecjia_error | bool
      */
     public function handle()
     {
@@ -39,7 +40,7 @@ class UpdateHashCodeAction
             'language' => RC_Config::get('system.locale'),
             'charset' => 'utf-8',
             'php_ver' => PHP_VERSION,
-            'mysql_ver' => self::getMysqlVersionByConnection(RC_DB::connection()),
+            'mysql_ver' => DatabaseConnection::getMysqlVersionByConnection(RC_DB::connection()),
             'ecjia_version' => VERSION,
             'ecjia_release' => RELEASE,
             'royalcms_version' => \Royalcms\Component\Foundation\Royalcms::VERSION,

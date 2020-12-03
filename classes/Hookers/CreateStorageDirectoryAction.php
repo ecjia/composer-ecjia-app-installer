@@ -20,7 +20,7 @@ class CreateStorageDirectoryAction
      */
     public function handle()
     {
-        $dirs = RC_Package::package('app::installer')->loadConfig('checking_dirs');
+        $dirs = config('app-installer::checking_dirs');
         collect($dirs)->map(function ($dir) {
             if (!RC_File::isDirectory($dir)) {
                 RC_File::makeDirectory($dir);
