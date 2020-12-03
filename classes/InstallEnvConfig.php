@@ -30,7 +30,7 @@ class InstallEnvConfig
 
     public function readEnvExamplePath()
     {
-        return royalcms()->appPath('installer/data/env.example');
+        return royalcms()->appPath('installer') . '/data/env.example';
     }
 
     /**
@@ -58,7 +58,7 @@ class InstallEnvConfig
             $contentArray->transform(function ($item) use ($data){
                 foreach ($data as $key => $value) {
                     if (str_contains($item, $key)) {
-                        return $key . ' = ' . $value;
+                        return $key . '=' . $value;
                     }
                 }
 
