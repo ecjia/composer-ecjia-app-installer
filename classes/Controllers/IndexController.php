@@ -476,17 +476,17 @@ class IndexController extends BaseControllerAbstract
 //        return false;
     }
 
-    /**
-     * 检测是否已安装程序
-     * @throws InstallLockedException
-     */
-    private function check_installed()
-    {
-        /* 初始化流程控制变量 */
-        if (Helper::checkInstallLock()) {
-            throw new InstallLockedException('已经安装');
-        }
-    }
+//    /**
+//     * 检测是否已安装程序
+//     * @throws InstallLockedException
+//     */
+//    private function check_installed()
+//    {
+//        /* 初始化流程控制变量 */
+//        if (Helper::checkInstallLock()) {
+//            throw new InstallLockedException('已经安装');
+//        }
+//    }
 
     /**
      * 设置安装步骤状态
