@@ -84,12 +84,12 @@ class InstallEnvConfig
         try {
             $envset = new EnvironmentSet();
             $content = $envset->readFile($this->envPath);
-//            dd($content);
+
             foreach ($data as $key => $value) {
                 [$newEnvFileContent, $isNewVariableSet] = $envset->setEnvVariable($content, $key, $value);
                 $content = $newEnvFileContent;
             }
-            dd($newEnvFileContent);
+
             $envset->writeFile($this->envPath, $newEnvFileContent);
         } catch (Exception $e) {
             return new ecjia_error('write_config_file_failed', __('写入配置文件出错', 'installer'));
