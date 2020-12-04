@@ -21,8 +21,9 @@ class SaveInstallLockFileAction
      */
     public function handle()
     {
-        $path = storage_path() . '/data/install.lock';
-        return RC_File::put($path, 'ECJIA INSTALLED');
+        $path = base_path('content/storages/data/install.lock');
+        $date = date('Y-m-d');
+        return RC_File::put($path, "ECJIA INSTALLED $date");
     }
 
 }

@@ -17,11 +17,12 @@ class DatabaseConnection
      * 创建数据库连接
      *
      * @access  public
-     * @param   string      $host        主机
-     * @param   string      $port        端口号
-     * @param   string      $user        用户名
-     * @param   string      $pass        密码
-     * @return  \Royalcms\Component\Database\Connection | ecjia_error      成功返回数据库连接对象，失败返回false
+     * @param string $host 主机
+     * @param string $port 端口号
+     * @param string $user 用户名
+     * @param string $pass 密码
+     * @param null $database
+     * @return ecjia_error|Connection      成功返回数据库连接对象，失败返回false
      */
     public static function createDatabaseConnection($host, $port, $user, $pass, $database = null)
     {
@@ -133,7 +134,7 @@ class DatabaseConnection
             return new ecjia_error('connect_failed', __('连接数据库失败，请检查您输入的数据库帐号是否正确。', 'installer'));
         }
         $r = $conn->select("select version() as version;");
-        $version = collect(collect($r)->lists('version'))->first();
+        $version = collect(collect($r)->pluck('version'))->first();
         $ver = strstr($version, '-', true);
         if ( $ver ) {
             return $ver;
