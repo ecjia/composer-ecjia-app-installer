@@ -33,7 +33,7 @@ class InstallPercent
     {
         $count = (new InstallMigrationFile())->getMigrationFilesCount();
         if (!is_ecjia_error($count)) {
-            $this->parts['install_structure'] = $count;
+            $this->parts[self::INSTALL_STRUCTURE_PART] = $count;
         }
 
         $this->cookie = $cookie;
@@ -72,11 +72,20 @@ class InstallPercent
     {
         if (isset($this->parts[$part])) {
             if ($part == self::INSTALL_STRUCTURE_PART) {
+                $offset = $this->getInstalledOffset(self::INSTALL_STRUCTURE_PART);
                 $over = (new InstallMigrationFile())->getWillMigrationFilesCount();
+                
                 if (!is_ecjia_error($over)) {
                     if ($over < $step) {
                         $step = $over;
                     }
+
+                    //第一次
+                    if ($offset == $this->offset) {
+                        $pre = $this->parts[self::INSTALL_STRUCTURE_PART] - $over;
+                        $step = $pre + $step;
+                    }
+
                     $this->setValue($step);
                 }
             } else {
@@ -85,6 +94,19 @@ class InstallPercent
         }
 
         return $this;
+    }
+
+    /**
+     * 获取已经安装完成步骤的offset值
+     */
+    protected function getInstalledOffset($part)
+    {
+        $keys = array_keys($this->parts);
+        $key = array_search($part, $keys);
+        $keys = array_slice($keys,0, $key+1);
+        $parts = array_intersect_key($this->parts, array_flip($keys));
+        $total = array_sum($parts);
+        return $total;
     }
 
     /**
