@@ -48,6 +48,7 @@
 namespace Ecjia\App\Installer\Controllers;
 
 use Ecjia\App\Installer\AdminPasswordStorage;
+use Ecjia\App\Installer\DatabaseConfig;
 use Ecjia\App\Installer\InstallCookie;
 use Ecjia\App\Installer\InstallDatabase;
 use Ecjia\App\Installer\InstallEnvConfig;
@@ -213,17 +214,8 @@ class InstallController extends BaseControllerAbstract
             $db_database = trim($this->request->input('db_database'));
             $db_prefix   = trim($this->request->input('db_prefix'));
 
-            //动态修改数据库连接配置
-            $default = royalcms('config')->get('database.connections.default');
-
-            $default['host']     = $db_host;
-            $default['port']     = $db_port;
-            $default['username'] = $db_user;
-            $default['password'] = $db_pass;
-            $default['database'] = $db_database;
-            $default['prefix']   = $db_prefix;
-
-            royalcms('config')->set('database.connections.default', $default);
+            //重设数据库连接
+            (new DatabaseConfig('default'))->resetConfig($db_host, $db_port, $db_user, $db_pass, $db_database, $db_prefix);
 
             $limit = 20;
 
@@ -271,17 +263,8 @@ class InstallController extends BaseControllerAbstract
             $db_database = trim($this->request->input('db_database'));
             $db_prefix   = trim($this->request->input('db_prefix'));
 
-            //动态修改数据库连接配置
-            $default = royalcms('config')->get('database.connections.default');
-
-            $default['host']     = $db_host;
-            $default['port']     = $db_port;
-            $default['username'] = $db_user;
-            $default['password'] = $db_pass;
-            $default['database'] = $db_database;
-            $default['prefix']   = $db_prefix;
-
-            royalcms('config')->set('database.connections.default', $default);
+            //重设数据库连接
+            (new DatabaseConfig('default'))->resetConfig($db_host, $db_port, $db_user, $db_pass, $db_database, $db_prefix);
 
             $result = InstallSeederFile::installBaseData();
 
@@ -312,17 +295,8 @@ class InstallController extends BaseControllerAbstract
             $db_database = trim($this->request->input('db_database'));
             $db_prefix   = trim($this->request->input('db_prefix'));
 
-            //动态修改数据库连接配置
-            $default = royalcms('config')->get('database.connections.default');
-
-            $default['host']     = $db_host;
-            $default['port']     = $db_port;
-            $default['username'] = $db_user;
-            $default['password'] = $db_pass;
-            $default['database'] = $db_database;
-            $default['prefix']   = $db_prefix;
-
-            royalcms('config')->set('database.connections.default', $default);
+            //重设数据库连接
+            (new DatabaseConfig('default'))->resetConfig($db_host, $db_port, $db_user, $db_pass, $db_database, $db_prefix);
 
             $result = InstallSeederFile::installDemoData();
 
@@ -353,17 +327,8 @@ class InstallController extends BaseControllerAbstract
             $db_database = trim($this->request->input('db_database'));
             $db_prefix   = trim($this->request->input('db_prefix'));
 
-            //动态修改数据库连接配置
-            $default = royalcms('config')->get('database.connections.default');
-
-            $default['host']     = $db_host;
-            $default['port']     = $db_port;
-            $default['username'] = $db_user;
-            $default['password'] = $db_pass;
-            $default['database'] = $db_database;
-            $default['prefix']   = $db_prefix;
-
-            royalcms('config')->set('database.connections.default', $default);
+            //重设数据库连接
+            (new DatabaseConfig('default'))->resetConfig($db_host, $db_port, $db_user, $db_pass, $db_database, $db_prefix);
 
             $admin_name             = trim($this->request->input('admin_name'));
             $admin_password         = trim($this->request->input('admin_password'));
