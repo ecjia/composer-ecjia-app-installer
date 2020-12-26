@@ -74,7 +74,7 @@ class InstallPercent
             if ($part == self::INSTALL_STRUCTURE_PART) {
                 $offset = $this->getInstalledOffset(self::INSTALL_STRUCTURE_PART);
                 $over = (new InstallMigrationFile())->getWillMigrationFilesCount();
-                
+
                 if (!is_ecjia_error($over)) {
                     if ($over < $step) {
                         $step = $over;
