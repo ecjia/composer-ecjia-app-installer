@@ -104,9 +104,6 @@ class InstallController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -123,9 +120,6 @@ class InstallController extends BaseControllerAbstract
             (new InstallPercent($this->cookie))->reset();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => 0));
         } catch (\Exception $exception) {
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
@@ -172,9 +166,6 @@ class InstallController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -202,9 +193,6 @@ class InstallController extends BaseControllerAbstract
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::CREATE_DATABASE_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
@@ -264,9 +252,6 @@ class InstallController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent, 'more' => $more));
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -308,9 +293,6 @@ class InstallController extends BaseControllerAbstract
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -351,9 +333,6 @@ class InstallController extends BaseControllerAbstract
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::INSTALL_DEMO_DATA_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
@@ -423,9 +402,6 @@ class InstallController extends BaseControllerAbstract
             $percent = (new InstallPercent($this->cookie))->setStepValue(InstallPercent::CREATE_ADMIN_PASSPORT_PART)->getPercent();
             return $this->showmessage('', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('percent' => $percent));
         } catch (\Exception $exception) {
-            return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
-        } catch (\TypeError $exception) {
-            // 捕获类型错误 返回值/参数不正确
             return $this->showmessage($exception->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         } catch (\Error $exception) {
             // 捕获类型错误 返回值/参数不正确
