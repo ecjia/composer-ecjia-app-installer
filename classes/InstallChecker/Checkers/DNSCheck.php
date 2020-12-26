@@ -35,7 +35,7 @@ class DNSCheck
         }
         else {
             $checked_label = $checker->getCancel();
-            $checked_status = false;
+            $checked_status = true;
         }
 
         return [
