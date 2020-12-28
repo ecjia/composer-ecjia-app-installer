@@ -38,12 +38,6 @@ class FrontHookSubscriber
 
         $events->addAction(
             'ecjia_installer_finished_after',
-            'Ecjia\App\Installer\Hookers\UpdateDemoApiUrlAction',
-            16
-        );
-
-        $events->addAction(
-            'ecjia_installer_finished_after',
             'Ecjia\App\Installer\Hookers\SaveInstallLockFileAction',
             18
         );
