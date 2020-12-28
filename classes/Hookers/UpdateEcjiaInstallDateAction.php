@@ -4,8 +4,8 @@
 namespace Ecjia\App\Installer\Hookers;
 
 
+use ecjia_config;
 use ecjia_error;
-use RC_DB;
 use RC_Time;
 use Royalcms\Component\Database\QueryException;
 
@@ -25,7 +25,7 @@ class UpdateEcjiaInstallDateAction
     public function handle()
     {
         try {
-            return RC_DB::table('shop_config')->where('code', 'install_date')->update(array('value' => RC_Time::gmtime()));
+            return ecjia_config::write('install_date', RC_Time::gmtime());
         } catch (QueryException $e) {
             return new ecjia_error($e->getCode(), $e->getMessage());
         }
