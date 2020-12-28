@@ -83,7 +83,6 @@ use Ecjia\App\Installer\Timezone;
 use RC_App;
 use RC_Hook;
 use RC_Uri;
-use Ecjia\App\Installer\Helper;
 use ecjia;
 
 class IndexController extends BaseControllerAbstract
@@ -276,16 +275,7 @@ class IndexController extends BaseControllerAbstract
             //设置安装新的状态
             $this->stepInstallStatus(InstallCheckStatus::STEP4);
 
-//            $this->check_installed();
-
-//            //安装完成后的一些善后处理
-//            Helper::updateInstallDate();
-//            Helper::updateEcjiaVersion();
-//            Helper::updateHashCode();
-//            Helper::updateDemoApiUrl();
-//            Helper::createStorageDirectory();
-//            Helper::saveInstallLock();
-
+            //安装完成后的一些善后处理
             RC_Hook::do_action('ecjia_installer_finished_after');
 
             //安装完成，清除cookie

@@ -23,7 +23,7 @@ abstract class BaseControllerAbstract extends SimpleController
         $this->__FILE__ = dirname(dirname(__FILE__));
 
         parent::__construct();
-        
+
         /* js与css加载路径*/
         $this->assign('system_statics_url', RC_Uri::system_static_url());
         $this->assign('front_url', RC_App::apps_url('statics/front', $this->__FILE__));
