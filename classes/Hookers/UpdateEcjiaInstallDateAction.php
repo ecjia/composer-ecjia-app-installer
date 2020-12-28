@@ -25,7 +25,7 @@ class UpdateEcjiaInstallDateAction
     public function handle()
     {
         try {
-            return ecjia_config::write('install_date', RC_Time::gmtime());
+            return ecjia_config::add('hidden', 'install_date', RC_Time::gmtime());
         } catch (QueryException $e) {
             return new ecjia_error($e->getCode(), $e->getMessage());
         }

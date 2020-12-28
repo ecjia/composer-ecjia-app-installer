@@ -25,7 +25,7 @@ class UpdateEcjiaVersionAction
     {
         try {
             $version = config('release.version', '3.0.0');
-            return ecjia_config::write('ecjia_version', $version);
+            return ecjia_config::add('hidden', 'ecjia_version', $version);
         } catch (QueryException $e) {
             return new ecjia_error($e->getCode(), $e->getMessage());
         }

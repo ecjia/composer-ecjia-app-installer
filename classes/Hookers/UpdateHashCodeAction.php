@@ -50,7 +50,7 @@ class UpdateHashCodeAction
             );
             ecjia_cloud::instance()->api('product/analysis/install')->data($data)->run();
 
-            return ecjia_config::write('hash_code', $hash_code);
+            return ecjia_config::add('hidden', 'hash_code', $hash_code);
         } catch (\Exception $e) {
             return new ecjia_error($e->getCode(), $e->getMessage());
         } catch (\Error $e) {

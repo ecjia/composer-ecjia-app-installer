@@ -16,12 +16,12 @@ class CreateStorageDirectoryAction
 
     /**
      * Handle the event.
-     * @return
+     * @return void
      */
     public function handle()
     {
         $dirs = config('app-installer::checking_dirs');
-        collect($dirs)->map(function ($dir) {
+        collect($dirs)->each(function ($dir) {
             if (!RC_File::isDirectory($dir)) {
                 RC_File::makeDirectory($dir);
             }
