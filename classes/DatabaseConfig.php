@@ -28,7 +28,7 @@ class DatabaseConfig
      */
     public function resetConfig($db_host, $db_port, $db_user, $db_pass, $db_database, $db_prefix = null)
     {
-        $default = royalcms('config')->get('database.connections.default');
+        $db = royalcms('config')->get('database.connections.'.$this->connection);
 
         $db['host']     = $db_host;
         $db['port']     = $db_port;
