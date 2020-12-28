@@ -17,6 +17,11 @@ class FrontHookSubscriber
      */
     public function subscribe(Dispatcher $events)
     {
+        $events->addAction(
+            'ecjia_installer_finished_after',
+            'Ecjia\App\Installer\Hookers\ResetDatabaseConfigAction',
+            8
+        );
 
         $events->addAction(
             'ecjia_installer_finished_after',
