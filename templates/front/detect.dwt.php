@@ -35,7 +35,7 @@
 									</tr>
                                     {/foreach}
 				                </tbody>
-			           		</table>	
+			           		</table>
 						</div>
 
                         {if $dir_permission}
@@ -58,11 +58,35 @@
 									 </tr>
 									 <!-- {/foreach} -->
 				                </tbody>
-			            	</table>	
+			            	</table>
 						</div>
                         {/if}
 
-				    </div> 
+                        {if $disable_functions}
+                        <h4>{t domain="installer"}被禁用函数检测{/t}</h4>
+                        <div class="span8">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th width="200px;">{t domain="installer"}函数名称{/t}</th>
+                                    <th width="200px;">{t domain="installer"}当前状态{/t}</th>
+                                    <th>{t domain="installer"}所需状态{/t}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <!-- {foreach from=$disable_functions item=item key=key} -->
+                                <tr>
+                                    <td>{$item.name}</td>
+                                    <td>{$item.checked_label}</td>
+                                    <td>{$item.suggest_label}</td>
+                                </tr>
+                                <!-- {/foreach} -->
+                                </tbody>
+                            </table>
+                        </div>
+                        {/if}
+
+				    </div>
 					<p class="submit">
 						<input type="submit" class="btn primary configuration_system_btn {if $check_right neq 1}disabled{/if}" value='{t domain="installer"}开始下一步：配置系统{/t} &raquo;' />
 					</p>
