@@ -32,6 +32,12 @@ abstract class BaseControllerAbstract extends SimpleController
         $this->assign('version', config('release.version'));
         $this->assign('build', config('release.build'));
 
+        //模板引擎设置
+        $this->view->caching = 0;
+        $this->view->cache_lifetime = 0;
+        $this->view->debugging = true;
+        $this->view->force_compile = true;
+
     }
 
     protected function load_hooks()
