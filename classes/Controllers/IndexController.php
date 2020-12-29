@@ -57,6 +57,7 @@ use Ecjia\App\Installer\BrowserEvent\InstallStartEvent;
 use Ecjia\App\Installer\BrowserEvent\PageEventManager;
 use Ecjia\App\Installer\Exceptions\InstallLockedException;
 use Ecjia\App\Installer\InstallChecker\Checkers\DirectoryPermissionCheck;
+use Ecjia\App\Installer\InstallChecker\Checkers\DisableFunctionsCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DNSCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\DomainCheck;
 use Ecjia\App\Installer\InstallChecker\Checkers\ExtensionCurlCheck;
@@ -175,6 +176,7 @@ class IndexController extends BaseControllerAbstract
             $checker->checkItem('ext_zlib', ExtensionZlibCheck::class);
             $checker->checkItem('upload_filesize', UploadMaxFilesizeCheck::class);
             $checker->checkItem('dir_permission', DirectoryPermissionCheck::class);
+            $checker->checkItem('disable_functions', DisableFunctionsCheck::class);
 
             $checker->checking();
 
@@ -190,8 +192,10 @@ class IndexController extends BaseControllerAbstract
             unset($sys_info['ip']);
             unset($sys_info['domain']);
             unset($sys_info['dir_permission']);
+            unset($sys_info['disable_functions']);
 
             $dir_permission = $checked['dir_permission'];
+            $disable_functions = $checked['disable_functions'];
 
             //检测必须开启项是否开启
             $check_all_right = empty($result) ? true : false;
@@ -202,6 +206,7 @@ class IndexController extends BaseControllerAbstract
             $this->assign('install_errors', $install_errors);
             $this->assign('sys_info', $sys_info);
             $this->assign('dir_permission', $dir_permission);
+            $this->assign('disable_functions', $disable_functions);
             $this->assign('check_right', $check_all_right);
 
             $this->assign('ecjia_step', 2);
