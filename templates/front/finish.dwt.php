@@ -33,6 +33,7 @@
                     </ul>
                     </div>
                     {/if}
+                    
                     <p>{t domain="installer"}各种体验，希望您能尽情享用ECJIA带来的乐趣！{/t}</p>
                 </div>
 			</div>
