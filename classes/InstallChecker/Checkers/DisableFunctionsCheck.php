@@ -23,7 +23,7 @@ class DisableFunctionsCheck
 
         $checked = collect($functions)->map(function ($item) use ($open_disable_functions, $checker) {
             $checked_label  = $checker->getCancel() . __('禁用', 'installer');
-            $checked_status = false;
+            $checked_status = in_array($item, $open_disable_functions) ? false : true;
 
             return [
                 'value'          => $item,
