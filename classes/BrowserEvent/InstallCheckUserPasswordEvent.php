@@ -4,7 +4,9 @@
 namespace Ecjia\App\Installer\BrowserEvent;
 
 
-class InstallCheckUserPasswordEvent
+use Ecjia\Component\BrowserEvent\BrowserEventInterface;
+
+class InstallCheckUserPasswordEvent implements BrowserEventInterface
 {
 
 

@@ -4,6 +4,7 @@
 namespace Ecjia\App\Installer\BrowserEvent;
 
 
+use Ecjia\Component\BrowserEvent\BrowserEventInterface;
 use RC_Script;
 
 class InstallCheckDatabaseAccountEvent implements BrowserEventInterface

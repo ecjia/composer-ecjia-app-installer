@@ -4,6 +4,8 @@
 namespace Ecjia\App\Installer\BrowserEvent;
 
 
+use Ecjia\Component\BrowserEvent\BrowserEventInterface;
+
 class AgreeChangeEvent implements BrowserEventInterface
 {
 
