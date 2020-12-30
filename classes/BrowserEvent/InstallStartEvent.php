@@ -92,10 +92,8 @@ class InstallStartEvent implements BrowserEventInterface
             ecjia.front.install.showmessage('user_mail', ecjia_lang.email_format);
             return false;
         }
-    
-        // ecjia.front.install.start_install();
         
-        var middleware = ecjia.middleware();
+        let middleware = ecjia.middleware();
         middleware.use(ecjia.front.task.checkDatabasePasswordCorrectTask);
         middleware.use(ecjia.front.task.checkDatabaseExistsTask);
         middleware.use(ecjia.front.task.checkAdminPasswordTask);
@@ -108,8 +106,6 @@ class InstallStartEvent implements BrowserEventInterface
         middleware.use(ecjia.front.task.createAdminPassportTask);
         middleware.use(ecjia.front.task.installFinishTask);
         middleware.handleRequest();
-        
-    
     });
     
     
