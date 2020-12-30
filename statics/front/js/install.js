@@ -2,72 +2,6 @@
 ;
 (function(app, $) {
 	app.install = {
-		// //初始化配置必填项验证
-		// start: function() {
-        //
-        //
-		// 	//验证数据库密码是否正确
-		// 	var params = "db_host=" + dbhost + "&"
-		// 		+ "db_port=" + dbport + "&"
-		// 		+ "db_user=" + dbuser + "&"
-		// 		+ "db_pass=" + dbpassword + "&"
-		// 		+ "dbdatabase=" + dbdatabase;
-		// 	var url = $('.check_db_correct').attr('data-url');
-        //
-		// 	var status = true;
-		// 	$.ajax({
-		// 		type: 'post',
-		// 		url: url,
-		// 		data: params,
-		// 		async: false,
-		// 		success: function(result) {
-		// 			if (result.state != 'success') {
-		// 				smoke.alert(result.message, {ok: js_lang.ok,});
-		// 				status = false;
-		// 				return false;
-		// 			}
-		// 		},
-		// 	});
-		// 	if (status == false) {
-		// 		return false;
-		// 	}
-        //
-		// 	//验证是否确认覆盖数据库
-		// 	if (is_create == 1) {
-		// 		var check_result;
-		// 		var url = $('.check_db_exists').attr('data-url');
-		// 		$.ajax({
-		// 			type: 'post',
-		// 			url: url,
-		// 			data: params,
-		// 			async: false,
-		// 			success: function(result) {
-		// 				check_result = result;
-		// 			},
-		// 		});
-		// 		if (check_result.is_exist == true) {
-		// 			smoke.confirm(js_lang.database_name_already_exists, function(e) {
-		// 				if (e) {
-		// 					status = true;
-		// 					$('input[name="is_create"]').val(0); //覆盖数据库
-		// 					start_install();
-		// 				} else {
-		// 					status = false;
-		// 					$('#dbdatabase').val(dbdatabase).focus();
-		// 					return false;
-		// 				}
-		// 			}, {
-		// 				ok: js_lang.ok,
-		// 				cancel: js_lang.cancel
-		// 			});
-		// 		} else {
-		// 			start_install();
-		// 		}
-		// 	} else {
-		// 		start_install();
-		// 	}
-		// },
-
 		return_setting: function() {
 			$('body').css('height', 'auto');
 			$('#js-ecjia_deploy').css('display', 'block');
@@ -110,24 +44,7 @@
         //提示程序安装终止信息
         stopNotice: function() {
             $("#js-monitor-wait-please").html(js_lang.installation_abort);
-        },
-
-        //显示完成（成功）信息
-        // SuccessMsg: function() {
-        //     notice_html += "<span class='install_correct'><img alt='' src=" + correct_img + " />"+ js_lang.success + "</span>" + lf;
-        //     $('#js-notice').html(notice_html);
-        // },
-
-        //显示错误信息
-        // ErrorMsg: function(result) {
-        //     stopNotice();
-        //     notice_html += "<span class='install_error'><img alt='' src=" + error_img + " />" + js_lang.fail + "</span>" + lf;
-        //     $("#js-monitor-notice").css('display', "block");
-        //
-        //     notice_html += "<strong class='m_l30' style='color:red'>"+ js_lang.prompt + result + "</strong>";
-        //     $('#js-notice').html(notice_html);
-        //     $('#js-install-return-once').css('display', 'block');
-        // }
+        }
 
 	}
 
