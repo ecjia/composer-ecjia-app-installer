@@ -1,0 +1,16 @@
+{
+    "name": "ecjia/app-installer",
+    "description": "The ECJia App Installer package.",
+    "type": "royalcms-app",
+    "license": "MIT",
+    "homepage": "https://github.com/ecjia",
+    "authors": [
+        {
+            "name": "Royal Wang",
+            "email": "hxroyal@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9"
+    }
+}
